@@ -107,7 +107,7 @@ function CharacterSheet({ info }) {
               <h5
                 style={{
                   margin: 0,
-                  borderTopStyle: res != "Fire" ? "dashed" : "none",
+                  borderTopStyle: res !== "Fire" ? "dashed" : "none",
                 }}
               >
                 {res + " res. " + info.resistances[res].toString() + "%"}
@@ -220,7 +220,7 @@ function CharacterSheet({ info }) {
 WIS: ${info.attributes.wis}`}
         </p> */}
       </div>
-      {result != "none" ? (
+      {result !== "none" ? (
         <Box
           style={{
             position: "fixed",

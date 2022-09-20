@@ -1,10 +1,10 @@
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import "./App.css";
 import CharacterSheet from "./components/CharacterSheet";
 import { useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+// import { getAuth } from "firebase/auth";
+// import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 // TODO: Replace the following with your app's Firebase project configuration
@@ -21,7 +21,7 @@ const firebaseConfig = {
 };
 
 // // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// const app = initializeApp(firebaseConfig);
 // const db = getFirestore(app);
 const db = getDatabase();
 
@@ -48,7 +48,7 @@ function App() {
   };
   return (
     <div className="App" style={{ display: "flex", justifyContent: "center" }}>
-      {character != "none" ? (
+      {character !== "none" ? (
         <CharacterSheet info={character} />
       ) : (
         <div>
