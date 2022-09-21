@@ -60,14 +60,25 @@ function App() {
       {character !== "none" ? (
         <CharacterSheet info={character} />
       ) : (
-        <div>
-          <label>Character </label>
-          <input
-            type="text"
-            onChange={characterSelectChanged}
-            value={characterName}
-          ></input>
-          <button onClick={loadCharacter}>GO</button>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div style={{ flexDirection: "column" }}>
+            <label>Character </label>
+            <input
+              type="text"
+              onChange={characterSelectChanged}
+              value={characterName}
+            ></input>
+            <button onClick={loadCharacter}>GO</button>
+          </div>
+          <div style={{ flexDirection: "column", borderStyle: "dashed" }}>
+            <h3>COMING SOON!!!</h3>
+            <img
+              style={{ height: "80vh" }}
+              alt="Twev's Tome of Arcane Knowledge and War Tactics"
+              src={require("./images/TToAKaWTcover.png")}
+            />
+            <h3>Preorder(not) available now!</h3>
+          </div>
         </div>
       )}
     </div>
