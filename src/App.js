@@ -1,7 +1,7 @@
 // import logo from "./logo.svg";
 import "./App.css";
 import CharacterSheet from "./components/CharacterSheet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 // import { getAuth } from "firebase/auth";
 // import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
@@ -32,6 +32,10 @@ function App() {
   const loadCharacter = async (e) => {
     e.preventDefault();
     console.log(characterName);
+    document.title =
+      characterName.charAt(0).toUpperCase() +
+      characterName.slice(1) +
+      "'s Character Sheet - Battle Team";
     // const citiesCol = collection(db, "characters");
     // const citySnapshot = await getDocs(citiesCol);
     // const cityList = citySnapshot.docs.map((doc) => doc.data());
@@ -46,6 +50,11 @@ function App() {
   const characterSelectChanged = (e) => {
     setCharacterName(e.target.value);
   };
+
+  useEffect(() => {
+    document.title = "Battle Team";
+  }, []);
+
   return (
     <div className="App" style={{ display: "flex", justifyContent: "center" }}>
       {character !== "none" ? (
