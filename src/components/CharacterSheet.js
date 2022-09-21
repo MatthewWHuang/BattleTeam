@@ -194,27 +194,50 @@ function CharacterSheet({ info }) {
           </Box>
         </div>
 
-        <Box style={{ width: 600, height: 683, alignContent: "center" }}>
-          <button style={{ width: 50 }} onClick={() => roll(4)}>
-            D4
-          </button>
-          <button style={{ width: 50 }} onClick={() => roll(6)}>
-            D6
-          </button>
-          <button style={{ width: 50 }} onClick={() => roll(8)}>
-            D8
-          </button>
-          <button style={{ width: 50 }} onClick={() => roll(10)}>
-            D10
-          </button>
-          <button style={{ width: 50 }} onClick={() => roll(12)}>
-            D12
-          </button>
-          <button style={{ width: 50 }} onClick={() => roll(20)}>
-            D20
-          </button>
-        </Box>
-
+        <div>
+          <Box style={{ height: 200, flexDirection: "row" }}>
+            <div>
+              {[
+                "Head",
+                "Eyes",
+                "Mouth",
+                "Neck",
+                "Chest",
+                "Left Hand",
+                "Right Hand",
+                "Left Wrist",
+                "Right Wrist",
+                "Legs",
+                "Feet",
+              ].map((s) => (
+                <h6 style={{ margin: 0 }}>{s + ": None"}</h6>
+              ))}
+            </div>
+            <div>
+              <h5>Inventory Empty</h5>
+            </div>
+          </Box>
+          <Box style={{ width: 600, height: 469, alignContent: "center" }}>
+            <button style={{ width: 50 }} onClick={() => roll(4)}>
+              D4
+            </button>
+            <button style={{ width: 50 }} onClick={() => roll(6)}>
+              D6
+            </button>
+            <button style={{ width: 50 }} onClick={() => roll(8)}>
+              D8
+            </button>
+            <button style={{ width: 50 }} onClick={() => roll(10)}>
+              D10
+            </button>
+            <button style={{ width: 50 }} onClick={() => roll(12)}>
+              D12
+            </button>
+            <button style={{ width: 50 }} onClick={() => roll(20)}>
+              D20
+            </button>
+          </Box>
+        </div>
         {/* <p>
           {`VIT: ${info.attributes.vit} 
 WIS: ${info.attributes.wis}`}
