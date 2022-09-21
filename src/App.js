@@ -28,6 +28,7 @@ const db = getDatabase();
 function App() {
   const [characterName, setCharacterName] = useState("");
   const [character, setCharacter] = useState("none");
+  const [inAdmin, setInAdmin] = useState(false);
 
   const loadCharacter = async (e) => {
     e.preventDefault();
@@ -51,6 +52,19 @@ function App() {
     setCharacterName(e.target.value);
   };
 
+  const enterAdmin = (e) => {
+    e.preventDefault();
+    var pass = prompt(
+      "Enter the correct password or you shall be sacrificed to our Dragon Cave..."
+    );
+    if (pass === "BT1vsSoop") {
+      setInAdmin(true);
+      alert("You have entered Admin Mode!!!");
+    } else {
+      alert("INCORRECT!!! SACRAFICE THEM TO THE DRAGONS!!!");
+    }
+  };
+
   useEffect(() => {
     document.title = "Battle Team";
   }, []);
@@ -62,13 +76,18 @@ function App() {
       ) : (
         <div style={{ display: "flex", flexDirection: "row" }}>
           <div style={{ flexDirection: "column" }}>
-            <label>Character </label>
-            <input
-              type="text"
-              onChange={characterSelectChanged}
-              value={characterName}
-            ></input>
-            <button onClick={loadCharacter}>GO</button>
+            <form>
+              <label>Character </label>
+              <input
+                type="text"
+                onChange={characterSelectChanged}
+                value={characterName}
+              ></input>
+              <button type="submit" onClick={loadCharacter}>
+                GO
+              </button>
+            </form>
+            <button onClick={enterAdmin}>enter admin mode</button>
           </div>
           <div style={{ flexDirection: "column", borderStyle: "dashed" }}>
             <h3>COMING SOON!!!</h3>
