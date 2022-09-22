@@ -1,10 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "./Box";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue } from "firebase/database";
+import firebaseConfig from "../FirebaseCreds";
+import useCharacter from "../api/CharacterAPI";
+import { useParams } from "react-router-dom";
 
-function CharacterSheet({ info }) {
-  console.log(info);
+function CharacterSheet({}) {
+  // let [searchParams, setSearchParams] = useSearchParams();
+
+  const { characterName } = useParams();
   const [result, setResult] = useState("none");
   const [resultSource, setResultSource] = useState("none");
+  const info = useCharacter(characterName);
+
+  // useEffect(() => {
+  //   const characterRef = ref(db, "characters/" + characterName);
+  //   onValue(characterRef, (snapshot) => {
+  //     const data = snapshot.val();
+  //     console.log(data);
+  //     // setCharacter(data);
+  //     setInfo(data);
+  //   });
+  // }, []);
 
   const dismissResult = () => {
     setResult("none");
@@ -15,6 +33,22 @@ function CharacterSheet({ info }) {
     setResult(Math.ceil(Math.random() * sides));
     setResultSource("D" + sides);
   };
+  if (!info.level) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignContent: "center",
+        }}
+      >
+        <div>
+          <h3 style={{ display: "flex" }}>Loading...</h3>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div
@@ -44,7 +78,9 @@ function CharacterSheet({ info }) {
               textAlign: "left",
             }}
           >
-            {"Level " + info.level.toString() + " " + info.class}
+            {"Level " +
+              info.level +
+              (info.class == "none" ? ", no class" : " " + info.class)}
           </h6>
         </div>
         <Box style={{ display: "flex", flexDirection: "column", margin: 0 }}>
