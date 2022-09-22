@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/BattleTeam/static/css/main.073c9b0a.css",
-    "main.js": "/BattleTeam/static/js/main.2e4f9588.js",
+    "main.js": "/BattleTeam/static/js/main.90eeb19a.js",
     "static/js/787.71e672d5.chunk.js": "/BattleTeam/static/js/787.71e672d5.chunk.js",
     "static/media/TToAKaWTcover.png": "/BattleTeam/static/media/TToAKaWTcover.22eadc85b53405bb90a6.png",
     "index.html": "/BattleTeam/index.html",
     "main.073c9b0a.css.map": "/BattleTeam/static/css/main.073c9b0a.css.map",
-    "main.2e4f9588.js.map": "/BattleTeam/static/js/main.2e4f9588.js.map",
+    "main.90eeb19a.js.map": "/BattleTeam/static/js/main.90eeb19a.js.map",
     "787.71e672d5.chunk.js.map": "/BattleTeam/static/js/787.71e672d5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.2e4f9588.js"
+    "static/js/main.90eeb19a.js"
   ]
 }
