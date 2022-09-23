@@ -1,11 +1,11 @@
+import { useRouteError } from "react-router-dom";
+
 function ErrorPage({}) {
+  const error = useRouteError();
   return (
     <div>
-      <h1>
-        An unexpected error has occured.
-        {/* Sorry, our servers have been pentrated by a Level 140 Dragon (an error
-          has occured). */}
-      </h1>
+      <h1>An unexpected error has occured.</h1>
+      <h2>{error}</h2>
     </div>
   );
 }
