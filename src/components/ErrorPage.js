@@ -5,7 +5,7 @@ function ErrorPage({}) {
   return (
     <div>
       <h1>An unexpected error has occured.</h1>
-      <h2>{error}</h2>
+      <h2>{JSON.stringify(error.data)}</h2>
     </div>
   );
 }

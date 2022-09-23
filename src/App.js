@@ -15,30 +15,35 @@ import Root from "./components/Root";
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Root />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          path: "",
+          element: <Home />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "character/:characterName",
+          element: <CharacterSheet />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "create/character",
+          element: <CharacterCreate />,
+          errorElement: <ErrorPage />,
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: "character/:characterName",
-        element: <CharacterSheet />,
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: "create/character",
-        element: <CharacterCreate />,
-        errorElement: <ErrorPage />,
-      },
-    ],
-  },
-]);
+    basename: "/BattleTeam",
+  }
+);
 
 // const pages = {
 //   Home: (
