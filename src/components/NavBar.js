@@ -23,16 +23,11 @@ function NavBar({}) {
     >
       <Link to="/" style={{ textDecoration: "initial" }}>
         <div>
-          <h1
-            style={{
-              margin: 0,
-              marginLeft: 20,
-              marginRight: 20,
-              color: "black",
-            }}
-          >
-            Battle Team
-          </h1>
+          <img
+            style={{ width: 150, marginRight: 25 }}
+            src={require("../images/BattlunLogo.png")}
+            alt="Battlun"
+          />
         </div>
       </Link>
       {!state.loggedIn ? (
