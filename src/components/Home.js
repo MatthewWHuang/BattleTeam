@@ -3,12 +3,15 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
 import firebaseConfig from "../FirebaseCreds";
 import { Link } from "react-router-dom";
+import { getCharacters } from "../api/CharacterAPI";
+import { useNavigate } from "react-router-dom";
 
 // // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase();
+// const app = initializeApp(firebaseConfig);
+// const db = getDatabase();
 
-function Home({ openPage, globalVals, setGlobalVals }) {
+function Home({ globalVals, setGlobalVals }) {
+  const navigate = useNavigate();
   const [characterName, setCharacterName] = useState("");
   const loadCharacter = async (e) => {
     e.preventDefault();
@@ -21,13 +24,24 @@ function Home({ openPage, globalVals, setGlobalVals }) {
     // const citySnapshot = await getDocs(citiesCol);
     // const cityList = citySnapshot.docs.map((doc) => doc.data());
     // console.log(cityList);
-    const characterRef = ref(db, "characters/" + characterName);
-    onValue(characterRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log(data);
-      // setCharacter(data);
-      openPage("CharacterSheet", { info: data });
-    });
+    const characterList = getCharacters();
+    const characterID = "";
+    for (let character in Object.keys(characterList)) {
+      console.log(character);
+      if (
+        characterName.toLowerCase() === characterList[character].toLowerCase()
+      ) {
+        characterID = character;
+      }
+    }
+    console.log(characterID);
+    navigate("/character/" + characterID);
+    // const characterRef = ref(db, "characters/" + characterID);
+    // onValue(characterRef, (snapshot) => {
+    //   const data = snapshot.val();
+    //   console.log(data);
+    //   // setCharacter(data);
+    // });
   };
   const characterSelectChanged = (e) => {
     setCharacterName(e.target.value);
@@ -48,8 +62,14 @@ function Home({ openPage, globalVals, setGlobalVals }) {
 
   const createCharacter = () => {};
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      <div style={{ flexDirection: "column" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ flexDirection: "column", display: "none" }}>
         <form>
           <label>Character </label>
           <input
@@ -60,9 +80,9 @@ function Home({ openPage, globalVals, setGlobalVals }) {
           {/* <button type="submit" onClick={loadCharacter}>
             GO
           </button> */}
-          <Link to={"/character/" + characterName}>
-            <button>GO</button>
-          </Link>
+          {/* <Link to={"/character/" + characterName}> */}
+          <button onClick={loadCharacter}>GO</button>
+          {/* </Link> */}
         </form>
         <Link to={"/create/character/"}>
           <button onClick={createCharacter}>Create New Character</button>
@@ -72,7 +92,7 @@ function Home({ openPage, globalVals, setGlobalVals }) {
       <div style={{ flexDirection: "column", borderStyle: "dashed" }}>
         <h3>COMING SOON!!!</h3>
         <img
-          style={{ height: "80vh" }}
+          style={{ height: "70vh" }}
           alt="Twev's Tome of Arcane Knowledge and War Tactics"
           src={require("../images/TToAKaWTcover.png")}
         />

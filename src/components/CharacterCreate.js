@@ -1,5 +1,5 @@
 import { createNewCharacter } from "../api/CharacterAPI";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 function CharacterCreate({}) {
   //   const blankCharacter = useBlankCharacter();
@@ -14,8 +14,12 @@ function CharacterCreate({}) {
   const createCharacter = (e) => {
     e.preventDefault();
     setEntered(true);
-    createNewCharacter(name);
   };
+  useEffect(() => {
+    if (entered) {
+      createNewCharacter(name);
+    }
+  }, [entered]);
   return (
     <div>
       {!entered ? (

@@ -4,15 +4,17 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
 import firebaseConfig from "../FirebaseCreds";
 import useCharacter from "../api/CharacterAPI";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 function CharacterSheet({}) {
   // let [searchParams, setSearchParams] = useSearchParams();
 
-  const { characterName } = useParams();
+  const { characterID } = useParams();
   const [result, setResult] = useState("none");
   const [resultSource, setResultSource] = useState("none");
-  const info = useCharacter(characterName);
+  const info = useCharacter(characterID);
 
   // useEffect(() => {
   //   const characterRef = ref(db, "characters/" + characterName);
@@ -33,7 +35,7 @@ function CharacterSheet({}) {
     setResult(Math.ceil(Math.random() * sides));
     setResultSource("D" + sides);
   };
-  if (!info.level) {
+  if (!info || !info.level) {
     return (
       <div
         style={{
@@ -102,6 +104,21 @@ function CharacterSheet({}) {
             </h2>
           </div>
         </Box>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "right",
+            width: "100%",
+          }}
+        >
+          <Link to="settings">
+            <FontAwesomeIcon
+              style={{ height: "50px", color: "black" }}
+              icon={faGear}
+            />
+          </Link>
+        </div>
       </div>
       <div
         style={{ textAlign: "center", display: "flex", flexDirection: "row" }}

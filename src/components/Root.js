@@ -1,8 +1,9 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
+import NavBar from "./NavBar";
 function Root({}) {
   return (
     <div>
-      <div style={{ width: "100%" }}>{/* <h1>root</h1> */}</div>
+      <NavBar />
       <Outlet />
     </div>
   );
