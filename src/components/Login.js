@@ -7,23 +7,28 @@ function Login({}) {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [notification, setNotification] = useState("");
   const { state, logIn } = useContext(AuthContext);
 
   const handleLoginPress = async (e) => {
     e.preventDefault();
-    const success = await login(username, password);
-    if (success) {
+    const status = await login(username, password);
+    if (status === "success") {
       console.log("success");
       navigate("/");
       logIn(username);
-    } else {
+    } else if (status === "incorrect") {
+      setNotification("Username/password incorrect");
       console.log("incorrect");
       setPassword("");
+    } else {
+      setNotification("Sorry, something went wrong.");
     }
   };
   return (
     <div>
       <h1>Log In</h1>
+      <p style={{ color: "red" }}>{notification}</p>
       <form>
         <label htmlFor="username">Username: </label>
         <input
@@ -49,7 +54,9 @@ function Login({}) {
           LOG IN
         </button>
       </form>
-      <Link to="/signup">Sign Up</Link>
+      <p>
+        Don't have an account? <Link to="/signup">Sign Up</Link>!
+      </p>
     </div>
   );
 }

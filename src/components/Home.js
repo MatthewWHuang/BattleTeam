@@ -89,6 +89,15 @@ function Home({ globalVals, setGlobalVals }) {
         </Link>
         <button onClick={enterAdmin}>enter admin mode</button>
       </div>
+      <div style={{ width: "25vw" }}>
+        <h2 style={{ fontWeight: "normal" }}>
+          Welcome To The Offical <b>Battle Team</b> Website!
+        </h2>
+        <h4 style={{ fontWeight: "normal" }}>
+          <Link to="/signup">Create A Free Account</Link> To Access Our
+          Character Sheets, Rulebooks, And More!
+        </h4>
+      </div>
       <div style={{ flexDirection: "column", borderStyle: "dashed" }}>
         <h3>COMING SOON!!!</h3>
         <img

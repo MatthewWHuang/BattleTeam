@@ -23,7 +23,7 @@ function NavBar({}) {
     >
       <Link to="/" style={{ textDecoration: "initial" }}>
         <div>
-          <h1 style={{ color: "black" }}>Battle Team</h1>
+          <h1 style={{ color: "black", marginRight: 25 }}>Battle Team</h1>
           {/* <img
             style={{ width: 150, marginRight: 25 }}
             src={require("../images/BattlunLogo.png")}

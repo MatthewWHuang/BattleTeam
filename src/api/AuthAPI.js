@@ -12,6 +12,7 @@ import {
 import firebaseConfig from "../FirebaseCreds";
 import { useState, useEffect } from "react";
 import { sha1, sha256, sha384, sha512 } from "crypto-hash";
+import { faTurkishLiraSign } from "@fortawesome/free-solid-svg-icons";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
@@ -22,9 +23,13 @@ async function login(username, pass) {
   if (snapshot.exists()) {
     const data = snapshot.val();
     const hPass = await sha1(pass);
-    return hPass === data.password;
+    if (hPass === data.password) {
+      return "success";
+    } else {
+      return "incorrect";
+    }
   } else {
-    return false;
+    return "error";
   }
   // onValue(
   //   usersRef,
@@ -38,8 +43,23 @@ async function login(username, pass) {
 
 async function signup(username, pass) {
   const accountRef = ref(db, `accounts/${username}`);
-  const hPass = await sha1(pass);
-  set(accountRef, { password: hPass });
+  const dbRef = ref(db);
+  const snapshot = await get(child(dbRef, `accounts`));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    console.log("data");
+    console.log(data);
+    if (Object.keys(data).includes(username)) {
+      return "usernametaken";
+    } else {
+      const hPass = await sha1(pass);
+      set(accountRef, { password: hPass });
+      return "success";
+    }
+  } else {
+    return "error";
+  }
+
   //   const snapshot = await get(child(dbRef, `accounts/${username}`));
 
   //   if (snapshot.exists()) {

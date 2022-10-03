@@ -7,15 +7,21 @@ function Signup({}) {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [notification, setNotification] = useState("");
   const { state, logIn } = useContext(AuthContext);
 
   const handleSignupPress = async (e) => {
     e.preventDefault();
-    const success = await signup(username, password);
-    if (success) {
+    const status = await signup(username, password);
+    console.log(status);
+    if (status === "success") {
       console.log("success");
       navigate("/");
       logIn(username);
+    } else if (status === "usernametaken") {
+      setNotification("Username taken, please try another.");
+    } else {
+      setNotification("Sorry, something went wrong.");
     }
     // const success = await login(username, password);
     // if (success) {
@@ -30,6 +36,7 @@ function Signup({}) {
   return (
     <div>
       <h1>Sign Up</h1>
+      <p style={{ color: "red" }}>{notification}</p>
       <form>
         <label htmlFor="username">Username: </label>
         <input
@@ -55,7 +62,9 @@ function Signup({}) {
           SIGN UP
         </button>
       </form>
-      <Link to="/login">Log In</Link>
+      <p>
+        Already have an account? <Link to="/login">Log In</Link>!
+      </p>
     </div>
   );
 }
