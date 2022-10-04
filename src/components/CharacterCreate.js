@@ -25,6 +25,7 @@ function CharacterCreate({}) {
   }, [entered]);
   return (
     <div>
+      <h1>Create Character</h1>
       {!entered ? (
         <form>
           <label>Name</label>
