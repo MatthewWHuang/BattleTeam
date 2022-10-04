@@ -18,6 +18,7 @@ function CharacterSettings({}) {
   const [newInfo, setNewInfo] = useState({});
   useEffect(() => {
     setNewInfo(info);
+    document.title = info.name + " - Battle Team";
   }, [info]);
   // useEffect(() => {
   //   const characterRef = ref(db, "characters/" + characterName);

@@ -35,6 +35,11 @@ function CharacterSheet({}) {
     setResult(Math.ceil(Math.random() * sides));
     setResultSource("D" + sides);
   };
+
+  useEffect(() => {
+    document.title = info.name + " - Battle Team";
+  }, [info]);
+
   if (!info || !info.level) {
     return (
       <div

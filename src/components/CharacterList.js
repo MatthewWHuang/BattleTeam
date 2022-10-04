@@ -36,6 +36,7 @@ function CharacterList({}) {
       setCharacters(newCharacters);
     };
     getData();
+    document.title = "Character List - Battle Team";
   }, []);
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>

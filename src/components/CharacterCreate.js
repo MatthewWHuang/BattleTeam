@@ -23,6 +23,9 @@ function CharacterCreate({}) {
       createNewCharacter(name, state.username);
     }
   }, [entered]);
+  useEffect(() => {
+    document.title = "Create Character - Battle Team";
+  });
   return (
     <div>
       <h1>Create Character</h1>

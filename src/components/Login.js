@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import login from "../api/AuthAPI";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/Auth.context";
@@ -27,6 +27,11 @@ function Login({}) {
       setNotification("Sorry, something went wrong.");
     }
   };
+
+  useEffect(() => {
+    document.title = "Log In - Battle Team";
+  });
+
   return (
     <div>
       <h1>Log In</h1>

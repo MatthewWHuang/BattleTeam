@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
 import firebaseConfig from "../FirebaseCreds";
@@ -62,6 +62,10 @@ function Home({ globalVals, setGlobalVals }) {
       alert("INCORRECT!!! SACRAFICE THEM TO THE DRAGONS!!!");
     }
   };
+
+  useEffect(() => {
+    document.title = "Battle Team";
+  });
 
   const createCharacter = () => {};
   return (

@@ -33,6 +33,11 @@ function Signup({}) {
     //   setPassword("");
     // }
   };
+
+  useEffect(() => {
+    document.title = "Sign Up - Battle Team";
+  });
+
   return (
     <div>
       <h1>Sign Up</h1>
