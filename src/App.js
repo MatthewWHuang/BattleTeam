@@ -14,6 +14,7 @@ import CharacterSettings from "./components/CharacterSettings";
 import Login from "./components/Login";
 import { ContextProvider } from "./context/Auth.context";
 import Signup from "./components/Signup";
+import CharacterList from "./components/CharacterList";
 
 // // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -54,6 +55,11 @@ const router = createBrowserRouter(
         {
           path: "character/:characterID/settings",
           element: <CharacterSettings />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "list/characters",
+          element: <CharacterList />,
           errorElement: <ErrorPage />,
         },
       ],

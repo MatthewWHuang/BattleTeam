@@ -53,7 +53,7 @@ async function signup(username, pass) {
       return "usernametaken";
     } else {
       const hPass = await sha1(pass);
-      set(accountRef, { password: hPass });
+      set(accountRef, { characters: "none", password: hPass });
       return "success";
     }
   } else {
@@ -79,5 +79,21 @@ async function signup(username, pass) {
   // );
 }
 
+async function getCharacters(username) {
+  //   const accountRef = ref(db, `accounts/${username}/characters`);
+  const dbRef = ref(db);
+  const snapshot = await get(child(dbRef, `accounts/${username}/characters`));
+
+  if (snapshot.exists()) {
+    console.log("EXXISTSTST");
+    const data = snapshot.val();
+    console.log("gcdeeeata");
+    console.log(data === "none" ? [] : data);
+    return data === "none" ? [] : data;
+  } else {
+    return [];
+  }
+}
+
 export default login;
-export { signup };
+export { signup, getCharacters };

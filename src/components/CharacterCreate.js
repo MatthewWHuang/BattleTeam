@@ -1,11 +1,13 @@
 import { createNewCharacter } from "../api/CharacterAPI";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/Auth.context";
 function CharacterCreate({}) {
   //   const blankCharacter = useBlankCharacter();
   const [entered, setEntered] = useState(false);
   //   const [loaded, setLoaded] = useState(false);
   const [name, setName] = useState("");
+  const { state } = useContext(AuthContext);
 
   const nameChanged = (e) => {
     setName(e.target.value);
@@ -17,7 +19,8 @@ function CharacterCreate({}) {
   };
   useEffect(() => {
     if (entered) {
-      createNewCharacter(name);
+      console.log(state.username);
+      createNewCharacter(name, state.username);
     }
   }, [entered]);
   return (

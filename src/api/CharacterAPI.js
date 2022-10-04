@@ -73,7 +73,7 @@ async function getCharacters() {
   //   { onlyOnce: true }
   // );
 }
-function createNewCharacter(name) {
+async function createNewCharacter(name, username) {
   console.log("creating character...");
   // const [info, setInfo] = useState({});
   const characterRef = ref(db, "blankCharacter");
@@ -87,7 +87,7 @@ function createNewCharacter(name) {
   // useEffect(() => {
   onValue(
     characterRef,
-    (snapshot) => {
+    async (snapshot) => {
       // const characterRef = ref(db, "blankCharacter");
       // onValue(characterRef, (snapshot) => {
       //   const characterRef = ref(db, "blankCharacter");
@@ -110,6 +110,23 @@ function createNewCharacter(name) {
       const updates = {};
       updates[charID] = data;
       update(ref(db, "characters"), updates);
+      const dbRef = ref(db);
+
+      const accountSnapshot = await get(
+        child(dbRef, `accounts/${username}/characters`)
+      );
+      if (accountSnapshot.exists()) {
+        const listData = accountSnapshot.val();
+
+        const accountRef = ref(db, `accounts/${username}/characters`);
+
+        console.log("aaadata");
+        console.log(listData);
+        set(
+          accountRef,
+          listData === "none" ? [charID] : listData.concat(charID)
+        );
+      }
     },
     {
       onlyOnce: true,
@@ -133,10 +150,42 @@ function updateCharacter(id, info) {
   return true;
 }
 
+async function getCharacter(id) {
+  const dbRef = ref(db);
+
+  const snapshot = await get(child(dbRef, `characters/${id}`));
+
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return data;
+  }
+}
+
+async function idsToInfo(ids) {
+  const dbRef = ref(db);
+
+  const names = {};
+  console.log("ids");
+  console.log(ids);
+  for (let id of ids) {
+    const snapshot = await get(child(dbRef, `characters/${id}`));
+    console.log(id);
+    if (snapshot.exists()) {
+      console.log("s exists");
+      const data = snapshot.val();
+      console.log(data);
+      names[id] = data;
+    }
+  }
+  return names;
+}
+
 export default useCharacter;
 export {
   useBlankCharacter,
   createNewCharacter,
   updateCharacter,
   getCharacters,
+  getCharacter,
+  idsToInfo,
 };

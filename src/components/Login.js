@@ -17,6 +17,8 @@ function Login({}) {
       console.log("success");
       navigate("/");
       logIn(username);
+      localStorage.setItem("username", username);
+      localStorage.setItem("password", password);
     } else if (status === "incorrect") {
       setNotification("Username/password incorrect");
       console.log("incorrect");

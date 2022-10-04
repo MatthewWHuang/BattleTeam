@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
 import firebaseConfig from "../FirebaseCreds";
 import { Link } from "react-router-dom";
 import { getCharacters } from "../api/CharacterAPI";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/Auth.context";
 
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
@@ -13,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 function Home({ globalVals, setGlobalVals }) {
   const navigate = useNavigate();
   const [characterName, setCharacterName] = useState("");
+  const { state, logIn } = useContext(AuthContext);
+
   const loadCharacter = async (e) => {
     e.preventDefault();
     console.log(characterName);
@@ -89,15 +92,32 @@ function Home({ globalVals, setGlobalVals }) {
         </Link>
         <button onClick={enterAdmin}>enter admin mode</button>
       </div>
-      <div style={{ width: "25vw" }}>
-        <h2 style={{ fontWeight: "normal" }}>
-          Welcome To The Offical <b>Battle Team</b> Website!
-        </h2>
-        <h4 style={{ fontWeight: "normal" }}>
-          <Link to="/signup">Create A Free Account</Link> To Access Our
-          Character Sheets, Rulebooks, And More!
-        </h4>
-      </div>
+      {state.loggedIn ? (
+        <div style={{ marginRight: 50 }}>
+          <ul>
+            <li>
+              <Link to="/list/characters">
+                <p>View my characters</p>
+              </Link>
+            </li>
+            <li>
+              <Link to="/create/character">
+                <p>Create a character</p>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      ) : (
+        <div style={{ width: "25vw" }}>
+          <h2 style={{ fontWeight: "normal" }}>
+            Welcome To The Offical <b>Battle Team</b> Website!
+          </h2>
+          <h4 style={{ fontWeight: "normal" }}>
+            <Link to="/signup">Create A Free Account</Link> To Access Our
+            Character Sheets, Rulebooks, And More!
+          </h4>
+        </div>
+      )}
       <div style={{ flexDirection: "column", borderStyle: "dashed" }}>
         <h3>COMING SOON!!!</h3>
         <img

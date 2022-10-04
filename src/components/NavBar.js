@@ -1,10 +1,21 @@
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/Auth.context";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 function NavBar({}) {
   const { state } = useContext(AuthContext);
+  const [openMenu, setOpenMenu] = useState("");
+  const location = useLocation();
   console.log("state");
   console.log(state);
+
+  useEffect(() => {
+    console.log(openMenu);
+  });
+
+  useEffect(() => {
+    setOpenMenu("");
+  }, [location]);
   return (
     <div
       style={{
@@ -66,13 +77,55 @@ function NavBar({}) {
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <h3
-            style={{ marginRight: 10, cursor: "pointer" }}
-            title="Coming Soon!!!"
-          >
-            My Characters
-          </h3>
-          <h4 style={{ color: "darkGray", cursor: "default" }}>
+          <div>
+            <div
+            // style={{ display: "flex", flexDirection: "column" }}
+            >
+              <div
+                onClick={() => {
+                  openMenu === "char" ? setOpenMenu("") : setOpenMenu("char");
+                }}
+              >
+                <h3 style={{ marginBottom: 0 }}>Character</h3>
+              </div>
+              {openMenu === "char" ? (
+                <div
+                  style={{
+                    backgroundColor: "lightgray",
+                    position: "absolute",
+                    borderStyle: "solid",
+                  }}
+                >
+                  <Link to="/list/characters">
+                    <h3
+                      style={{
+                        marginRight: 0,
+                        cursor: "pointer",
+                        marginTop: 0,
+                      }}
+                    >
+                      My Characters
+                    </h3>
+                  </Link>
+                  <Link to="/create/character">
+                    {/* <div onClick={setOpenMenu("")}> */}
+                    <h3
+                      style={{
+                        marginRight: 0,
+                        cursor: "pointer",
+                        marginTop: 0,
+                        borderTopStyle: "solid",
+                      }}
+                    >
+                      Create Character
+                    </h3>
+                    {/* </div> */}
+                  </Link>
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <h4 style={{ color: "darkGray", cursor: "default", marginLeft: 10 }}>
             {state.username}
           </h4>
         </div>
