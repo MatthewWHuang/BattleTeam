@@ -8,6 +8,7 @@ import {
   update,
   get,
   child,
+  remove,
 } from "firebase/database";
 import firebaseConfig from "../FirebaseCreds";
 import { useState, useEffect } from "react";
@@ -84,54 +85,38 @@ async function createNewCharacter(name, username) {
   //   characters !== null ? (characters.length + 1).toString() : "Loading";
   const charID = push(characterRef).key;
 
+  const dbRef = ref(db);
+
   // useEffect(() => {
-  onValue(
-    characterRef,
-    async (snapshot) => {
-      // const characterRef = ref(db, "blankCharacter");
-      // onValue(characterRef, (snapshot) => {
-      //   const characterRef = ref(db, "blankCharacter");
-      //   const data = snapshot.val();
-      //   // console.log(data);
-      //   // setInfo(data);
-      //   // const listRef = ref(db, "characters");
-      //   // const newListRef = push(listRef);
-      //   data.name = name;
-      //   const updates = {};
-      //   updates[name] = data;
-      //   update(ref(db, "characters"), updates);
-      // });
-      const data = snapshot.val();
-      // console.log(data);
-      // setInfo(data);
-      // const listRef = ref(db, "characters");
-      // const newListRef = push(listRef);
-      data.name = name;
-      const updates = {};
-      updates[charID] = data;
-      update(ref(db, "characters"), updates);
-      const dbRef = ref(db);
 
-      const accountSnapshot = await get(
-        child(dbRef, `accounts/${username}/characters`)
-      );
-      if (accountSnapshot.exists()) {
-        const listData = accountSnapshot.val();
+  const snapshot = await get(child(dbRef, `blankCharacter`));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    // console.log(data);
+    // setInfo(data);
+    // const listRef = ref(db, "characters");
+    // const newListRef = push(listRef);
+    data.name = name;
+    const updates = {};
+    updates[charID] = data;
+    update(ref(db, "characters"), updates);
 
-        const accountRef = ref(db, `accounts/${username}/characters`);
+    const accountSnapshot = await get(
+      child(dbRef, `accounts/${username}/characters`)
+    );
+    if (accountSnapshot.exists()) {
+      const listData = accountSnapshot.val();
 
-        console.log("aaadata");
-        console.log(listData);
-        set(
-          accountRef,
-          listData === "none" ? [charID] : listData.concat(charID)
-        );
-      }
-    },
-    {
-      onlyOnce: true,
+      const accountRef = ref(db, `accounts/${username}/characters`);
+
+      console.log("aaadata");
+      console.log(listData);
+      set(accountRef, listData === "none" ? [charID] : listData.concat(charID));
     }
-  );
+    console.log("charID");
+    console.log(charID);
+    return charID;
+  }
   // }, []);
 
   // useEffect(() => {
@@ -161,6 +146,11 @@ async function getCharacter(id) {
   }
 }
 
+async function deleteCharacter(id) {
+  const characterRef = ref(db, "characters/" + id);
+  remove(characterRef);
+}
+
 async function idsToInfo(ids) {
   const dbRef = ref(db);
 
@@ -188,4 +178,5 @@ export {
   getCharacters,
   getCharacter,
   idsToInfo,
+  deleteCharacter,
 };
