@@ -8,6 +8,8 @@ function CharacterCreate({}) {
   //   const [loaded, setLoaded] = useState(false);
   const [name, setName] = useState("");
   const { state } = useContext(AuthContext);
+  const [id, setId] = useState("");
+  const [creating, setCreating] = useState(false);
 
   const nameChanged = (e) => {
     setName(e.target.value);
@@ -19,8 +21,16 @@ function CharacterCreate({}) {
   };
   useEffect(() => {
     if (entered) {
+      setCreating(true);
       console.log(state.username);
-      createNewCharacter(name, state.username);
+      const changeCharId = async () => {
+        const newId = await createNewCharacter(name, state.username);
+        console.log("newid");
+        console.log(newId);
+        setId(newId);
+        setCreating(false);
+      };
+      changeCharId();
     }
   }, [entered]);
   useEffect(() => {
@@ -29,18 +39,26 @@ function CharacterCreate({}) {
   return (
     <div>
       <h1>Create Character</h1>
-      {!entered ? (
+      {creating ? (
+        <div>
+          <h1>Creating Character...</h1>
+        </div>
+      ) : !entered ? (
         <form>
-          <label>Name</label>
+          <label>Name: </label>
           <input
             placeholder="Character Name"
             value={name}
             onChange={nameChanged}
+            required
           ></input>
-          <button onClick={createCharacter}>CREATE CHARACTER</button>
+          <br />
+          <button onClick={createCharacter} disabled={name === ""}>
+            CREATE CHARACTER
+          </button>
         </form>
       ) : (
-        <Link to={"/character/" + name}>
+        <Link to={"/character/" + id}>
           <button>Open Character</button>
         </Link>
       )}

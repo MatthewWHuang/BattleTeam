@@ -17,6 +17,7 @@ function Root({}) {
         localStorage.getItem("password")
       );
       if (savedUsername && status === "success") {
+        console.log("auto logged in");
         logIn(savedUsername);
       }
     };

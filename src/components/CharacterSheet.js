@@ -72,6 +72,10 @@ function CharacterSheet({}) {
               marginTop: 0,
               marginBottom: 5,
               textAlign: "left",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              width: 200,
             }}
           >
             {info.name}
@@ -130,7 +134,7 @@ function CharacterSheet({}) {
       >
         <div style={{ flexDirection: "column" }}>
           {Object.keys(info.attributes).map((atr) => (
-            <div style={{ width: 100 }}>
+            <div style={{ width: 100 }} key={atr}>
               <Box style={{ height: 72 }}>
                 <h1 style={{ margin: 0 }}>{info.attributes[atr]}</h1>
                 <h3 style={{ margin: 0 }}>{atr.toUpperCase()}</h3>
@@ -142,12 +146,36 @@ function CharacterSheet({}) {
           <Box>
             <h5 style={{ margin: 0 }}>HP</h5>
             <h2 style={{ margin: 0 }}>{info.hp}</h2>
-            <h2 style={{ margin: 0, borderTopStyle: "double" }}>{info.hp}</h2>
+            <h2
+              style={{
+                margin: 0,
+                borderTopStyle: "double",
+                marginBottom: 0,
+                height: 25,
+              }}
+            >
+              {info.attributes.vit * 10}
+            </h2>
+            <h6 style={{ margin: 0, fontSize: 8 }}>
+              Regen {Math.max(Math.floor(info.attributes.vit / 10), 1)}
+            </h6>
           </Box>
           <Box>
             <h5 style={{ margin: 0 }}>MANA</h5>
             <h2 style={{ margin: 0 }}>{info.mana}</h2>
-            <h2 style={{ margin: 0, borderTopStyle: "double" }}>{info.mana}</h2>
+            <h2
+              style={{
+                margin: 0,
+                borderTopStyle: "double",
+                marginBottom: 0,
+                height: 25,
+              }}
+            >
+              {info.attributes.wis * 10}
+            </h2>
+            <h6 style={{ margin: 0, fontSize: 8 }}>
+              Regen {Math.max(Math.floor(info.attributes.int / 10), 1)}
+            </h6>
           </Box>
           <Box>
             {[
@@ -167,6 +195,7 @@ function CharacterSheet({}) {
                   margin: 0,
                   borderTopStyle: res !== "Fire" ? "dashed" : "none",
                 }}
+                key={res}
               >
                 {res + " res. " + info.resistances[res].toString() + "%"}
               </h5>
@@ -268,7 +297,9 @@ function CharacterSheet({}) {
                 "Legs",
                 "Feet",
               ].map((s) => (
-                <h6 style={{ margin: 0 }}>{s + ": None"}</h6>
+                <h6 key={s} style={{ margin: 0 }}>
+                  {s + ": None"}
+                </h6>
               ))}
             </div>
             <div>

@@ -37,7 +37,7 @@ function CharacterList({}) {
     };
     getData();
     document.title = "Character List - Battle Team";
-  }, []);
+  });
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       {state.username !== "" ? (
@@ -46,39 +46,58 @@ function CharacterList({}) {
         ) : (
           <div>
             <h1>MY CHARACTERS</h1>
-            {characters.map((c) => {
-              console.log("hihiih");
-              console.log("characters");
-              console.log(c);
-              return (
-                <Link
-                  to={`/character/${c.id}`}
-                  key={c.id}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderStyle: "solid",
-                    width: "min-content",
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                  }}
-                >
-                  <h1 style={{ height: "min-content" }}>{c.name}</h1>
-                  <p
+            {characters.length > 0 ? (
+              characters.map((c) => {
+                console.log("hihiih");
+                console.log("characters");
+                console.log(c);
+                return (
+                  <Link
+                    to={`/character/${c.id}`}
+                    key={c.id}
                     style={{
-                      textAlign: "center",
-                      height: "min-content",
-                      marginLeft: 25,
-                      width: "max-content",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderStyle: "solid",
+                      width: 400,
+                      paddingLeft: 20,
+                      paddingRight: 20,
                     }}
                   >
-                    Level {c.level} {c.class}
-                  </p>
-                </Link>
-              );
-            })}
+                    <h1
+                      style={{
+                        height: "min-content",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {c.name}
+                    </h1>
+                    <p
+                      style={{
+                        textAlign: "center",
+                        height: "min-content",
+                        marginLeft: 25,
+                        width: "max-content",
+                      }}
+                    >
+                      Level {c.level}
+                      {c.class != "none" ? " " + c.class : ", no class"}
+                    </p>
+                  </Link>
+                );
+              })
+            ) : (
+              <div>
+                <h4>
+                  You do not have any characters yet.
+                  <Link to="/create/character">Create one</Link> now!
+                </h4>
+              </div>
+            )}
           </div>
         )
       ) : (
