@@ -29,10 +29,12 @@ function CharacterSettings({}) {
   }, [info]);
   useEffect(() => {
     const getClassInfo = async () => {
-      if (info.class && info.class !== "none") {
-        setClassInfo(await getClass(info.class.toLowerCase()));
-        console.log("class info");
-        console.log(await getClass(info.class.toLowerCase()));
+      if (newInfo.class) {
+        if (newInfo.class !== "none") {
+          setClassInfo(await getClass(newInfo.class.toLowerCase()));
+        } else {
+          setClassInfo({});
+        }
       }
     };
     getClassInfo();
@@ -137,11 +139,15 @@ function CharacterSettings({}) {
         <input
           // style={{ display: "inline" }}
           type="number"
-          onChange={(e) =>
-            setNewInfo((old) => ({ ...old, ...{ level: e.target.value } }))
-          }
+          onChange={(e) => {
+            if (e.target.value >= 1 && e.target.value % 1 === 0) {
+              setNewInfo((old) => ({ ...old, ...{ level: e.target.value } }));
+            }
+          }}
           value={newInfo.level || 1}
           id="level"
+          min={1}
+          step={1}
         />
         <br />
         <label htmlFor="class">Class: </label>
@@ -164,47 +170,45 @@ function CharacterSettings({}) {
             <div key={atr}>
               <label htmlFor={atr}>{atr.toUpperCase()}: </label>
               <p style={{ display: "inline" }}>
-                {newInfo.attributes ? newInfo.attributes[atr] : 10}
+                {newInfo.attributes
+                  ? newInfo.attributes[atr] +
+                    (classInfo && classInfo.stats
+                      ? (classInfo.stats.begin[atr] || 0) +
+                        (classInfo.stats.level[atr] || 0) * (newInfo.level - 1)
+                      : 0)
+                  : 10}
               </p>
               {newInfo.attributes ? (
-                Object.values(newInfo.attributes).reduce((a, b) => a + b, 0) >=
+                Object.values(
+                  Object.keys(info.attributes).map(
+                    (a) =>
+                      newInfo.attributes[a] +
+                      (classInfo && classInfo.stats
+                        ? (classInfo.stats.begin[a] || 0) +
+                          (classInfo.stats.level[a] || 0) * (newInfo.level - 1)
+                        : 0)
+                  )
+                ).reduce((a, b) => a + b, 0) >=
                 65 +
-                  (newInfo.level - 1) * 5 +
-                  (info.class !== "none"
-                    ? Object.keys(info.attributes)
-                        .map((s) => {
-                          console.log("aaaaaaaaaabbbb");
-                          console.log(classInfo);
-                          console.log(Object.keys(classInfo).length > 0);
-                          if (Object.keys(classInfo).length > 0) {
-                            console.log(
-                              classInfo ? classInfo.stats.begin : "",
-                              classInfo
-                                ? classInfo.stats.begin === undefined
-                                : "",
-                              atr
-                            );
-                          }
-                          if (
-                            classInfo &&
-                            classInfo.stats &&
-                            atr in Object.keys(classInfo.stats.begin)
-                          ) {
-                            console.log("sum");
-                            console.log(
-                              classInfo.stats[s].begin +
-                                classInfo.stats[s].level * (info.level - 1)
-                            );
-                            return (
-                              classInfo.stats[s].begin +
-                              classInfo.stats[s].level * (info.level - 1)
-                            );
-                          } else {
-                            return 0;
-                          }
-                        })
-                        .reduce((a, b) => a + b, 0)
-                    : 0) ? null : (
+                  ((newInfo.level - 1) * 5 +
+                    (newInfo.class !== "none"
+                      ? Object.keys(info.attributes)
+                          .map((s) => {
+                            if (
+                              classInfo &&
+                              classInfo.stats &&
+                              Object.keys(classInfo.stats.begin).includes(s)
+                            ) {
+                              return (
+                                classInfo.stats.begin[s] +
+                                classInfo.stats.level[s] * (info.level - 1)
+                              );
+                            } else {
+                              return 0;
+                            }
+                          })
+                          .reduce((a, b) => a + b, 0)
+                      : 0)) ? null : (
                   <button
                     style={{ padding: 0, marginLeft: 5 }}
                     id={atr}

@@ -7,13 +7,14 @@ import useCharacter from "../api/CharacterAPI";
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
-
+import { getExpForLevel } from "../helpers/CharacterCalcs";
 function CharacterSheet({}) {
   // let [searchParams, setSearchParams] = useSearchParams();
 
   const { characterID } = useParams();
   const [result, setResult] = useState("none");
   const [resultSource, setResultSource] = useState("none");
+  const [resultExtra, setResultExtra] = useState("");
   const info = useCharacter(characterID);
 
   // useEffect(() => {
@@ -34,6 +35,25 @@ function CharacterSheet({}) {
   const roll = (sides) => {
     setResult(Math.ceil(Math.random() * sides));
     setResultSource("D" + sides);
+  };
+
+  const rollAtr = (dice, bonuses, src) => {
+    console.log("hihihihierooiavhwiehpg9vbio");
+    console.log(
+      dice.map((r) => "d" + r.toString()).join(" + ") +
+        " + " +
+        bonuses.map((b) => b.toString()).join(" + ")
+    );
+    setResultExtra(
+      dice.map((r) => "d" + r.toString()).join(" + ") +
+        " + " +
+        bonuses.map((b) => b.toString()).join(" + ")
+    );
+    setResult(
+      dice.map((d) => Math.ceil(Math.random() * d)).reduce((a, b) => a + b, 0) +
+        bonuses.reduce((a, b) => a + b, 0)
+    );
+    setResultSource(src);
   };
 
   useEffect(() => {
@@ -109,7 +129,7 @@ function CharacterSheet({}) {
                 color: "darkgrey",
               }}
             >
-              {info.expMax}
+              {getExpForLevel(info.level)}
             </h2>
           </div>
         </Box>
@@ -130,7 +150,11 @@ function CharacterSheet({}) {
         </div>
       </div>
       <div
-        style={{ textAlign: "center", display: "flex", flexDirection: "row" }}
+        style={{
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "row",
+        }}
       >
         <div style={{ flexDirection: "column" }}>
           {Object.keys(info.attributes).map((atr) => (
@@ -234,19 +258,107 @@ function CharacterSheet({}) {
             <div>
               <Box>
                 <h5 style={{ margin: 0, width: 50 }}>SPEED</h5>
-                <h2 style={{ margin: 0, width: 50 }}>{info.speed}</h2>
+                <h3
+                  style={{
+                    margin: 0,
+                    width: 50,
+                    lineHeight: "0.95em",
+                    userSelect: "none",
+                  }}
+                >
+                  {info.speed}
+                </h3>
               </Box>
               <Box>
                 <h5 style={{ margin: 0, width: 50 }}>AVOID</h5>
-                <h2 style={{ margin: 0, width: 50 }}>{info.avoid}</h2>
+                <div
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: "10%",
+                    borderStyle: "solid",
+                    borderWidth: "thin",
+                    borderColor: "darkgray",
+                    userSelect: "none",
+                  }}
+                  onClick={() => {
+                    rollAtr(
+                      [Math.floor(info.attributes.dex / 2)],
+                      [Math.ceil(info.attributes.dex / 2)],
+                      "Avoid"
+                    );
+                  }}
+                >
+                  <h3 style={{ margin: 0, width: 50, lineHeight: "0.95em" }}>
+                    {Math.ceil(info.attributes.dex / 2).toString() + "+"}
+                    <br />
+                    {"d" + Math.floor(info.attributes.dex / 2).toString()}
+                  </h3>
+                </div>
               </Box>
               <Box>
                 <h5 style={{ margin: 0, width: 50 }}>HIT</h5>
-                <h2 style={{ margin: 0, width: 50 }}>{info.hit}</h2>
+                <div
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: "10%",
+                    borderStyle: "solid",
+                    borderWidth: "thin",
+                    borderColor: "darkgray",
+                    userSelect: "none",
+                  }}
+                  onClick={() => {
+                    rollAtr(
+                      [Math.floor(info.attributes.dex / 2)],
+                      [Math.ceil(info.attributes.dex / 2)],
+                      "Hit"
+                    );
+                  }}
+                >
+                  <h3 style={{ margin: 0, width: 50, lineHeight: "0.95em" }}>
+                    {Math.ceil(info.attributes.dex / 2).toString() + "+"}
+                    <br />
+                    {"d" + Math.floor(info.attributes.dex / 2).toString()}
+                  </h3>
+                </div>
               </Box>
               <Box>
                 <h5 style={{ margin: 0, width: 50 }}>M. HIT</h5>
-                <h2 style={{ margin: 0, width: 50 }}>{info.mhit}</h2>
+                <div
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: "10%",
+                    borderStyle: "solid",
+                    borderWidth: "thin",
+                    borderColor: "darkgray",
+                    userSelect: "none",
+                  }}
+                  onClick={() => {
+                    rollAtr(
+                      [
+                        Math.ceil(
+                          (info.attributes.wis + info.attributes.wis) / 4
+                        ),
+                      ],
+                      [
+                        Math.floor(
+                          (info.attributes.wis + info.attributes.wis) / 4
+                        ),
+                      ],
+                      "Magical Hit"
+                    );
+                  }}
+                >
+                  <h3 style={{ margin: 0, width: 50, lineHeight: "0.95em" }}>
+                    {Math.ceil(
+                      (info.attributes.wis + info.attributes.wis) / 4
+                    ).toString() + "+"}
+                    <br />
+                    {"d" +
+                      Math.floor(
+                        (info.attributes.wis + info.attributes.wis) / 4
+                      ).toString()}
+                  </h3>
+                </div>
               </Box>
             </div>
             <div>
@@ -347,6 +459,7 @@ WIS: ${info.attributes.wis}`}
           onClick={dismissResult}
         >
           <h6 style={{ margin: 0 }}>{resultSource}</h6>
+          <h3>{resultExtra}</h3>
           <h1>{result}</h1>
         </Box>
       ) : null}
