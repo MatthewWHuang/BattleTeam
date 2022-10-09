@@ -168,36 +168,38 @@ function CharacterSheet({}) {
         </div>
         <div style={{ flexDirection: "column", width: 100 }}>
           <Box>
-            <h5 style={{ margin: 0 }}>HP</h5>
-            <h2 style={{ margin: 0 }}>{info.hp}</h2>
+            <h5 style={{ margin: 0, color: "red" }}>HP</h5>
+            <h2 style={{ margin: 0, color: "red" }}>{info.hp}</h2>
             <h2
               style={{
                 margin: 0,
                 borderTopStyle: "double",
                 marginBottom: 0,
                 height: 25,
+                color: "red",
               }}
             >
               {info.attributes.vit * 10}
             </h2>
-            <h6 style={{ margin: 0, fontSize: 8 }}>
+            <h6 style={{ margin: 0, fontSize: 8, color: "red" }}>
               Regen {Math.max(Math.floor(info.attributes.vit / 10), 1)}
             </h6>
           </Box>
           <Box>
-            <h5 style={{ margin: 0 }}>MANA</h5>
-            <h2 style={{ margin: 0 }}>{info.mana}</h2>
+            <h5 style={{ margin: 0, color: "blue" }}>MANA</h5>
+            <h2 style={{ margin: 0, color: "blue" }}>{info.mana}</h2>
             <h2
               style={{
                 margin: 0,
                 borderTopStyle: "double",
                 marginBottom: 0,
                 height: 25,
+                color: "blue",
               }}
             >
               {info.attributes.wis * 10}
             </h2>
-            <h6 style={{ margin: 0, fontSize: 8 }}>
+            <h6 style={{ margin: 0, fontSize: 8, color: "blue" }}>
               Regen {Math.max(Math.floor(info.attributes.int / 10), 1)}
             </h6>
           </Box>
@@ -218,6 +220,18 @@ function CharacterSheet({}) {
                 style={{
                   margin: 0,
                   borderTopStyle: res !== "Fire" ? "dashed" : "none",
+                  color: {
+                    Fire: "orange",
+                    Water: "darkblue",
+                    Earth: "darkgray",
+                    Air: "#dcadf5",
+                    Poision: "#5dc55d",
+                    Acid: "green",
+                    Disease: "#8ad8ab",
+                    Pure: "lightcyan",
+                    Dark: "#351c75",
+                    Light: "lightyellow",
+                  }[res],
                 }}
                 key={res}
               >
