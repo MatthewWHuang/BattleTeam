@@ -100,9 +100,11 @@ function Home({ globalVals, setGlobalVals }) {
         <div style={{ marginRight: 50 }}>
           <ul>
             <li>
-              <Link to="/list/characters">
-                <p>View my characters</p>
-              </Link>
+              {state.username === "Turbo" ? null : (
+                <Link to="/list/characters">
+                  <p>View my characters</p>
+                </Link>
+              )}
             </li>
             <li>
               <Link to="/create/character">

@@ -15,6 +15,8 @@ import Login from "./components/Login";
 import { ContextProvider } from "./context/Auth.context";
 import Signup from "./components/Signup";
 import CharacterList from "./components/CharacterList";
+import BooksList from "./components/BooksList";
+import Book from "./components/Book";
 
 // // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -60,6 +62,16 @@ const router = createBrowserRouter(
         {
           path: "list/characters",
           element: <CharacterList />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "list/books",
+          element: <BooksList />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "books/:bookName",
+          element: <Book />,
           errorElement: <ErrorPage />,
         },
       ],

@@ -77,7 +77,7 @@ function NavBar({}) {
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <div>
+          <div style={{ marginRight: 20 }}>
             <div
             // style={{ display: "flex", flexDirection: "column" }}
             >
@@ -94,19 +94,34 @@ function NavBar({}) {
                     backgroundColor: "lightgray",
                     position: "absolute",
                     borderStyle: "solid",
+                    width: 150,
                   }}
                 >
-                  <Link to="/list/characters">
-                    <h3
-                      style={{
-                        marginRight: 0,
-                        cursor: "pointer",
-                        marginTop: 0,
-                      }}
-                    >
-                      My Characters
-                    </h3>
-                  </Link>
+                  {state.username === "Turbo" ? (
+                    <a href="https://rr.noordstar.me/data/e0cffb66">
+                      <h3
+                        style={{
+                          marginRight: 0,
+                          cursor: "pointer",
+                          marginTop: 0,
+                        }}
+                      >
+                        My Characters
+                      </h3>
+                    </a>
+                  ) : (
+                    <Link to="/list/characters">
+                      <h3
+                        style={{
+                          marginRight: 0,
+                          cursor: "pointer",
+                          marginTop: 0,
+                        }}
+                      >
+                        My Characters
+                      </h3>
+                    </Link>
+                  )}
                   <Link to="/create/character">
                     {/* <div onClick={setOpenMenu("")}> */}
                     <h3
@@ -120,6 +135,41 @@ function NavBar({}) {
                       Create Character
                     </h3>
                     {/* </div> */}
+                  </Link>
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <div style={{ marginRight: 20 }}>
+            <div
+            // style={{ display: "flex", flexDirection: "column" }}
+            >
+              <div
+                onClick={() => {
+                  openMenu === "books" ? setOpenMenu("") : setOpenMenu("books");
+                }}
+              >
+                <h3 style={{ marginBottom: 0 }}>Books(WIP, UNSAFE)</h3>
+              </div>
+              {openMenu === "books" ? (
+                <div
+                  style={{
+                    backgroundColor: "lightgray",
+                    position: "absolute",
+                    borderStyle: "solid",
+                    width: 150,
+                  }}
+                >
+                  <Link to="/list/books">
+                    <h3
+                      style={{
+                        marginRight: 0,
+                        cursor: "pointer",
+                        marginTop: 0,
+                      }}
+                    >
+                      My Books
+                    </h3>
                   </Link>
                 </div>
               ) : null}

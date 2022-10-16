@@ -392,7 +392,7 @@ function CharacterSheet({}) {
                 </h6>
                 <h3 style={{ margin: 0, width: 50 }}>0</h3>
                 <h6 style={{ margin: 0, width: 50, borderTopStyle: "dashed" }}>
-                  Amythest
+                  Amethyst
                 </h6>
                 <h3 style={{ margin: 0, width: 50 }}>0</h3>
                 <h6 style={{ margin: 0, width: 50, borderTopStyle: "dashed" }}>
