@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/BattleTeam/static/css/main.073c9b0a.css",
-    "main.js": "/BattleTeam/static/js/main.1a7b302c.js",
+    "main.js": "/BattleTeam/static/js/main.3f6b71b1.js",
     "static/js/787.71e672d5.chunk.js": "/BattleTeam/static/js/787.71e672d5.chunk.js",
     "static/media/TToAKaWTcover.png": "/BattleTeam/static/media/TToAKaWTcover.3871ecd4c3ddf0982ccd.png",
     "static/media/BasicRulebookCover.png": "/BattleTeam/static/media/BasicRulebookCover.5ab61274b950ce918ff9.png",
     "static/media/BattleTeamLogoSquare.png": "/BattleTeam/static/media/BattleTeamLogoSquare.190c2f3d6950372f07ce.png",
     "index.html": "/BattleTeam/index.html",
     "main.073c9b0a.css.map": "/BattleTeam/static/css/main.073c9b0a.css.map",
-    "main.1a7b302c.js.map": "/BattleTeam/static/js/main.1a7b302c.js.map",
+    "main.3f6b71b1.js.map": "/BattleTeam/static/js/main.3f6b71b1.js.map",
     "787.71e672d5.chunk.js.map": "/BattleTeam/static/js/787.71e672d5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.1a7b302c.js"
+    "static/js/main.3f6b71b1.js"
   ]
 }
