@@ -162,7 +162,7 @@ function CharacterSettings({}) {
           <option value="fighter">Fighter</option>
           <option value="healer">Healer</option>
           <option value="mage">Mage</option>
-          <option value="rouge">Rouge</option>
+          <option value="rogue">Rogue</option>
         </select>
         <br />
         {Object.keys(info.attributes).map((atr) => {
