@@ -18,7 +18,6 @@ function Home({ globalVals, setGlobalVals }) {
 
   const loadCharacter = async (e) => {
     e.preventDefault();
-    console.log(characterName);
     document.title =
       characterName.charAt(0).toUpperCase() +
       characterName.slice(1) +
@@ -30,14 +29,12 @@ function Home({ globalVals, setGlobalVals }) {
     const characterList = getCharacters();
     const characterID = "";
     for (let character in Object.keys(characterList)) {
-      console.log(character);
       if (
         characterName.toLowerCase() === characterList[character].toLowerCase()
       ) {
         characterID = character;
       }
     }
-    console.log(characterID);
     navigate("/character/" + characterID);
     // const characterRef = ref(db, "characters/" + characterID);
     // onValue(characterRef, (snapshot) => {

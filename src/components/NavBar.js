@@ -6,12 +6,6 @@ function NavBar({}) {
   const { state } = useContext(AuthContext);
   const [openMenu, setOpenMenu] = useState("");
   const location = useLocation();
-  console.log("state");
-  console.log(state);
-
-  useEffect(() => {
-    console.log(openMenu);
-  });
 
   useEffect(() => {
     setOpenMenu("");

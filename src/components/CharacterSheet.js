@@ -3,11 +3,12 @@ import Box from "./Box";
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
 import firebaseConfig from "../FirebaseCreds";
-import useCharacter from "../api/CharacterAPI";
+import useCharacter, { updateCharacter } from "../api/CharacterAPI";
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { getExpForLevel } from "../helpers/CharacterCalcs";
+import Input from "./Input";
 function CharacterSheet({}) {
   // let [searchParams, setSearchParams] = useSearchParams();
 
@@ -16,6 +17,7 @@ function CharacterSheet({}) {
   const [resultSource, setResultSource] = useState("none");
   const [resultExtra, setResultExtra] = useState("");
   const info = useCharacter(characterID);
+  const [currentInfo, setCurrentInfo] = useState(info);
 
   // useEffect(() => {
   //   const characterRef = ref(db, "characters/" + characterName);
@@ -38,12 +40,6 @@ function CharacterSheet({}) {
   };
 
   const rollAtr = (dice, bonuses, src) => {
-    console.log("hihihihierooiavhwiehpg9vbio");
-    console.log(
-      dice.map((r) => "d" + r.toString()).join(" + ") +
-        " + " +
-        bonuses.map((b) => b.toString()).join(" + ")
-    );
     setResultExtra(
       dice.map((r) => "d" + r.toString()).join(" + ") +
         " + " +
@@ -56,11 +52,19 @@ function CharacterSheet({}) {
     setResultSource(src);
   };
 
+  const editChar = async (newInfo, change) => {
+    if (change) {
+      updateCharacter(characterID, newInfo);
+    }
+    setCurrentInfo(newInfo);
+  };
+
   useEffect(() => {
     document.title = info.name + " - Battle Team";
+    setCurrentInfo(info);
   }, [info]);
 
-  if (!info || !info.level) {
+  if (!info || !info.level || !currentInfo.level) {
     return (
       <div
         style={{
@@ -77,62 +81,95 @@ function CharacterSheet({}) {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <div
         style={{
           display: "flex",
           alignItems: "flex-start",
           flexDirection: "row",
+          justifyContent: "space-between",
+          width: "65%",
         }}
       >
-        <div style={{ flexDirection: "column", padding: 0 }}>
-          <h2
-            style={{
-              marginLeft: 20,
-              marginTop: 0,
-              marginBottom: 5,
-              textAlign: "left",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              width: 200,
-            }}
-          >
-            {info.name}
-          </h2>
-          <h6
-            style={{
-              marginTop: 0,
-              marginBottom: 5,
-              marginLeft: 25,
-              fontWeight: "normal",
-              textAlign: "left",
-            }}
-          >
-            {"Level " +
-              info.level +
-              (info.class == "none" ? ", no class" : " " + info.class)}
-          </h6>
-        </div>
-        <Box style={{ display: "flex", flexDirection: "column", margin: 0 }}>
-          <h5 style={{ margin: 0 }}>EXP</h5>
-          <div style={{ display: "flex", flexDirection: "row", margin: 0 }}>
-            <h2 style={{ display: "flex", margin: 0, marginRight: 10 }}>
-              {info.exp}
-            </h2>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div style={{ flexDirection: "column", padding: 0 }}>
             <h2
               style={{
-                display: "flex",
-                margin: 0,
-                paddingLeft: 10,
-                borderLeftStyle: "solid",
-                color: "darkgrey",
+                marginLeft: 20,
+                marginTop: 0,
+                marginBottom: 5,
+                textAlign: "left",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                width: 200,
               }}
             >
-              {getExpForLevel(info.level)}
+              {info.name}
             </h2>
+            <h6
+              style={{
+                marginTop: 0,
+                marginBottom: 5,
+                marginLeft: 25,
+                fontWeight: "normal",
+                textAlign: "left",
+              }}
+            >
+              {"Level " +
+                info.level +
+                (info.class == "none" ? ", no class" : " " + info.class)}
+            </h6>
           </div>
-        </Box>
+          <Box
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              margin: 0,
+              marginBottom: 10,
+            }}
+          >
+            <h5 style={{ margin: 0 }}>EXP</h5>
+            <div style={{ display: "flex", flexDirection: "row", margin: 0 }}>
+              <Input
+                style={{
+                  width: 47,
+                  fontSize: "1.5em",
+                  fontWeight: "bold",
+                  height: 30,
+                }}
+                value={currentInfo.exp}
+                change={(val, change = true) => {
+                  editChar(
+                    {
+                      ...currentInfo,
+                      exp: val,
+                    },
+                    change
+                  );
+                }}
+                max={getExpForLevel(info.level)}
+              />
+              <h2
+                style={{
+                  display: "flex",
+                  margin: 0,
+                  paddingLeft: 10,
+                  borderLeftStyle: "solid",
+                  color: "darkgrey",
+                }}
+              >
+                {getExpForLevel(info.level)}
+              </h2>
+            </div>
+          </Box>
+        </div>
         <div
           style={{
             display: "flex",
@@ -169,7 +206,14 @@ function CharacterSheet({}) {
         <div style={{ flexDirection: "column", width: 100 }}>
           <Box>
             <h5 style={{ margin: 0, color: "red" }}>HP</h5>
-            <h2 style={{ margin: 0, color: "red" }}>{info.hp}</h2>
+            <Input
+              color="red"
+              value={currentInfo.hp}
+              change={(val) => {
+                editChar({ ...currentInfo, hp: parseInt(val) });
+              }}
+              max={info.attributes.vit * 10}
+            />
             <h2
               style={{
                 margin: 0,
@@ -187,7 +231,14 @@ function CharacterSheet({}) {
           </Box>
           <Box>
             <h5 style={{ margin: 0, color: "blue" }}>MANA</h5>
-            <h2 style={{ margin: 0, color: "blue" }}>{info.mana}</h2>
+            <Input
+              color="blue"
+              value={currentInfo.mana}
+              change={(val) => {
+                editChar({ ...currentInfo, mana: parseInt(val) });
+              }}
+              max={info.attributes.wis * 10}
+            />
             <h2
               style={{
                 margin: 0,
@@ -377,28 +428,48 @@ function CharacterSheet({}) {
             </div>
             <div>
               <Box>
-                <h6 style={{ margin: 0, width: 50 }}>Copper</h6>
-                <h3 style={{ margin: 0, width: 50 }}>0</h3>
-                <h6 style={{ margin: 0, width: 50, borderTopStyle: "dashed" }}>
-                  Silver
-                </h6>
-                <h3 style={{ margin: 0, width: 50 }}>0</h3>
-                <h6 style={{ margin: 0, width: 50, borderTopStyle: "dashed" }}>
-                  Gold
-                </h6>
-                <h3 style={{ margin: 0, width: 50 }}>0</h3>
-                <h6 style={{ margin: 0, width: 50, borderTopStyle: "dashed" }}>
-                  Platinum
-                </h6>
-                <h3 style={{ margin: 0, width: 50 }}>0</h3>
-                <h6 style={{ margin: 0, width: 50, borderTopStyle: "dashed" }}>
-                  Amethyst
-                </h6>
-                <h3 style={{ margin: 0, width: 50 }}>0</h3>
-                <h6 style={{ margin: 0, width: 50, borderTopStyle: "dashed" }}>
-                  Diamond
-                </h6>
-                <h3 style={{ margin: 0, width: 50 }}>0</h3>
+                {[
+                  "Copper",
+                  "Silver",
+                  "Gold",
+                  "Platinum",
+                  "Emerald",
+                  "Diamond",
+                ].map((c) => (
+                  <div key={c}>
+                    <h6
+                      style={{
+                        margin: 0,
+                        width: 50,
+                        borderTopStyle: c === "Copper" ? "none" : "dashed",
+                      }}
+                    >
+                      {c}
+                    </h6>
+                    <Input
+                      style={{
+                        width: 47,
+                        fontSize: "1.17em",
+                        fontWeight: "bold",
+                        height: "1.24em",
+                      }}
+                      value={currentInfo.currency[c[0].toLowerCase()]}
+                      change={(val, change = true) => {
+                        editChar(
+                          {
+                            ...currentInfo,
+                            currency: {
+                              ...currentInfo.currency,
+                              [c[0].toLowerCase()]: parseInt(val),
+                            },
+                          },
+                          change
+                        );
+                      }}
+                      max={Infinity}
+                    />
+                  </div>
+                ))}
               </Box>
             </div>
           </div>

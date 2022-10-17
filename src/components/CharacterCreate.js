@@ -22,11 +22,8 @@ function CharacterCreate({}) {
   useEffect(() => {
     if (entered) {
       setCreating(true);
-      console.log(state.username);
       const changeCharId = async () => {
         const newId = await createNewCharacter(name, state.username);
-        console.log("newid");
-        console.log(newId);
         setId(newId);
         setCreating(false);
       };

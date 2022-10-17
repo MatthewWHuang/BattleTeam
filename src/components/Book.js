@@ -13,7 +13,6 @@ function Book({ style, children }) {
   useEffect(() => {
     const get = async () => {
       const bookValue = await getBook(bookName);
-      console.log(bookValue);
       setBook(bookValue);
       // document.getElementById("book").innerHTML = bookValue.value;
     };

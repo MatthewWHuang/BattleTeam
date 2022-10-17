@@ -47,7 +47,6 @@ function ClassBox({ cls }) {
   useEffect(() => {
     const load = async () => {
       let info = await getClass(cls);
-      console.log(info);
       setClassInfo(info);
     };
     load();

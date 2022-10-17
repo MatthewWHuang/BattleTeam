@@ -21,7 +21,6 @@ function useCharacter(id) {
   useEffect(() => {
     onValue(characterRef, (snapshot) => {
       const data = snapshot.val();
-      console.log(data);
       setInfo(data);
     });
   }, []);
@@ -33,7 +32,6 @@ function useBlankCharacter() {
   useEffect(() => {
     onValue(characterRef, (snapshot) => {
       const data = snapshot.val();
-      console.log(data);
       setInfo(data);
     });
   }, []);
@@ -75,7 +73,6 @@ async function getCharacters() {
   // );
 }
 async function createNewCharacter(name, username) {
-  console.log("creating character...");
   // const [info, setInfo] = useState({});
   const characterRef = ref(db, "blankCharacter");
   // const [characters, setCharacters] = getCharacterNames();
@@ -109,12 +106,8 @@ async function createNewCharacter(name, username) {
 
       const accountRef = ref(db, `accounts/${username}/characters`);
 
-      console.log("aaadata");
-      console.log(listData);
       set(accountRef, listData === "none" ? [charID] : listData.concat(charID));
     }
-    console.log("charID");
-    console.log(charID);
     return charID;
   }
   // }, []);
@@ -155,15 +148,10 @@ async function idsToInfo(ids) {
   const dbRef = ref(db);
 
   const names = {};
-  console.log("ids");
-  console.log(ids);
   for (let id of ids) {
     const snapshot = await get(child(dbRef, `characters/${id}`));
-    console.log(id);
     if (snapshot.exists()) {
-      console.log("s exists");
       const data = snapshot.val();
-      console.log(data);
       names[id] = data;
     }
   }

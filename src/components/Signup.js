@@ -13,9 +13,7 @@ function Signup({}) {
   const handleSignupPress = async (e) => {
     e.preventDefault();
     const status = await signup(username, password);
-    console.log(status);
     if (status === "success") {
-      console.log("success");
       navigate("/");
       logIn(username);
     } else if (status === "usernametaken") {

@@ -14,14 +14,12 @@ function Login({}) {
     e.preventDefault();
     const status = await login(username, password);
     if (status === "success") {
-      console.log("success");
       navigate("/");
       logIn(username);
       localStorage.setItem("username", username);
       localStorage.setItem("password", password);
     } else if (status === "incorrect") {
       setNotification("Username/password incorrect");
-      console.log("incorrect");
       setPassword("");
     } else {
       setNotification("Sorry, something went wrong.");

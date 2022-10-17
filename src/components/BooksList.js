@@ -22,7 +22,6 @@ function BooksList({ style, children }) {
   useEffect(() => {
     const get = async () => {
       const booksValue = await getBooks();
-      console.log(booksValue);
       setBooks(booksValue);
     };
     get();
@@ -36,7 +35,6 @@ function BooksList({ style, children }) {
       }}
     >
       {Object.values(books).map((b) => {
-        console.log(b);
         return (
           <div style={{ position: "relative", margin: 5 }}>
             <Link to={`/books/${b.link}`}>

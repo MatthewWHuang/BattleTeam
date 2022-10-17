@@ -10,14 +10,11 @@ function Root({}) {
   useEffect(() => {
     const getSavedUser = async () => {
       const savedUsername = localStorage.getItem("username");
-      console.log("saved username");
-      console.log(savedUsername);
       const status = await login(
         savedUsername,
         localStorage.getItem("password")
       );
       if (savedUsername && status === "success") {
-        console.log("auto logged in");
         logIn(savedUsername);
       }
     };

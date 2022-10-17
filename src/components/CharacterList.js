@@ -11,9 +11,7 @@ function CharacterList({}) {
   const [characters, setCharacters] = useState("loading");
   useEffect(() => {
     const getData = async () => {
-      console.log(state.username);
       const ids = await getCharacters(state.username);
-      console.log(ids);
       const names = await idsToInfo(ids);
       var newCharacters = Object.keys(names).map((id) => {
         const idVal = names[id];
@@ -22,10 +20,7 @@ function CharacterList({}) {
           ...idVal,
         };
       });
-      console.log("names");
-      console.log(names);
-      console.log("new");
-      console.log(newCharacters);
+
       // for (let id in ids) {
       //   console.log(await getCharacter(id));
       //   console.log({ name: await getCharacter(id).name, id });
@@ -48,9 +43,6 @@ function CharacterList({}) {
             <h1>MY CHARACTERS</h1>
             {characters.length > 0 ? (
               characters.map((c) => {
-                console.log("hihiih");
-                console.log("characters");
-                console.log(c);
                 return (
                   <Link
                     to={`/character/${c.id}`}

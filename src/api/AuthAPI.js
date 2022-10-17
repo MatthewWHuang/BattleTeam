@@ -47,8 +47,6 @@ async function signup(username, pass) {
   const snapshot = await get(child(dbRef, `accounts`));
   if (snapshot.exists()) {
     const data = snapshot.val();
-    console.log("data");
-    console.log(data);
     if (Object.keys(data).includes(username)) {
       return "usernametaken";
     } else {
@@ -85,10 +83,7 @@ async function getCharacters(username) {
   const snapshot = await get(child(dbRef, `accounts/${username}/characters`));
 
   if (snapshot.exists()) {
-    console.log("EXXISTSTST");
     const data = snapshot.val();
-    console.log("gcdeeeata");
-    console.log(data === "none" ? [] : data);
     return data === "none" ? [] : data;
   } else {
     return [];
