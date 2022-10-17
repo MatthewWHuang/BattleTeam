@@ -1,4 +1,4 @@
-import { createNewCharacter } from "../api/CharacterAPI";
+import { createNewCharacter, getCharacters } from "../api/CharacterAPI";
 import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/Auth.context";
@@ -10,6 +10,7 @@ function CharacterCreate({}) {
   const { state } = useContext(AuthContext);
   const [id, setId] = useState("");
   const [creating, setCreating] = useState(false);
+  const [characters, setCharacters] = useState([]);
 
   const nameChanged = (e) => {
     setName(e.target.value);
@@ -32,7 +33,25 @@ function CharacterCreate({}) {
   }, [entered]);
   useEffect(() => {
     document.title = "Create Character - Battle Team";
+    const loadChars = async () => {
+      const info = await getCharacters();
+      setCharacters(info);
+      console.log(Object.keys(info).length);
+    };
+    loadChars();
   });
+
+  if (Object.keys(characters).length >= 3) {
+    return (
+      <div>
+        <h2>
+          You have reached your character limit. Delete a character to create
+          another.
+        </h2>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1>Create Character</h1>

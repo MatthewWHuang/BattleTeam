@@ -163,6 +163,7 @@ function CharacterSettings({}) {
           <option value="healer">Healer</option>
           <option value="mage">Mage</option>
           <option value="rogue">Rogue</option>
+          <option value="loser">Loser</option>
         </select>
         <br />
         {Object.keys(info.attributes).map((atr) => {
