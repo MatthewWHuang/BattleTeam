@@ -111,17 +111,37 @@ function CharacterSettings({}) {
           return v.name !== "Magic Bolt";
         });
       }
-      console.log(Object.keys(newClassInfo.skills));
       Object.keys(newClassInfo.skills).forEach((pos) => {
-        console.log(pos);
         if (newInfo.level >= parseInt(pos)) {
           nInfo.actions.push(...newClassInfo.skills[pos]);
         }
       });
     }
-    console.log("done!");
-
     setNewInfo(nInfo);
+  };
+
+  const changeLevel = async (e) => {
+    const nInfo = {
+      ...newInfo,
+    };
+    if (
+      e.target.value >= 1 &&
+      e.target.value % 1 === 0 &&
+      e.target.value <= 120
+    ) {
+      setNewInfo((old) => ({ ...old, ...{ level: e.target.value } }));
+      const classInfo = await getClass(newInfo.class);
+      const classSkills = classInfo.skills;
+      Object.keys(classSkills).forEach((pos) => {
+        if (e.target.value >= parseInt(pos)) {
+          classSkills[pos].forEach((skill) => {
+            if (!newInfo.actions.map((a) => a.name).includes(skill.name)) {
+              nInfo.actions.push(skill);
+            }
+          });
+        }
+      });
+    }
   };
 
   if (!info || !info.level) {
@@ -185,15 +205,7 @@ function CharacterSettings({}) {
         <input
           // style={{ display: "inline" }}
           type="number"
-          onChange={(e) => {
-            if (
-              e.target.value >= 1 &&
-              e.target.value % 1 === 0 &&
-              e.target.value <= 120
-            ) {
-              setNewInfo((old) => ({ ...old, ...{ level: e.target.value } }));
-            }
-          }}
+          onChange={changeLevel}
           value={newInfo.level || 1}
           id="level"
           min={1}
@@ -205,7 +217,6 @@ function CharacterSettings({}) {
         {[1, 20, 40, 60, 80, 100, 120]
           .slice(0, Math.ceil((parseInt(newInfo.level) + 1) / 20))
           .map((l) => {
-            console.log(l, parseInt(newInfo.level) + 1);
             return (
               <select
                 key={"classSelect" + String(l)}

@@ -617,7 +617,7 @@ function CharacterSheet({}) {
                                   light: "lightyellow",
                                   mana: "blue",
                                   hp: "red",
-                                  sta: "#ffee2fed",
+                                  sta: "#ffbc00",
                                 }[(val.type || "").toLowerCase()],
                               }}
                             >
