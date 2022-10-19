@@ -9,8 +9,13 @@ import useCharacter, {
 } from "../api/CharacterAPI";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faGrinTongueSquint,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import getClass from "../api/ClassAPI";
+import getBaseSkill from "../api/SkillAPI";
 
 function CharacterSettings({}) {
   // let [searchParams, setSearchParams] = useSearchParams();
@@ -31,7 +36,11 @@ function CharacterSettings({}) {
     const getClassInfo = async () => {
       if (newInfo.class) {
         if (newInfo.class !== "none") {
-          setClassInfo(await getClass(newInfo.class.toLowerCase()));
+          setClassInfo(
+            await getClass(
+              newInfo.class[newInfo.class.length - 1].toLowerCase()
+            )
+          );
         } else {
           setClassInfo({});
         }
@@ -76,6 +85,37 @@ function CharacterSettings({}) {
       deleteChar(characterID);
       navigate("/");
     }
+  };
+
+  const changeClass = async (e) => {
+    const nInfo = {
+      ...newInfo,
+      ...{ class: [e.target.value] },
+    };
+    if (e.target.value === "none") {
+      nInfo.actions = nInfo.actions.filter((v, i) => {
+        return v.name === "Unarmed Attack";
+      });
+      nInfo.actions.push(await getBaseSkill("MagicBolt"));
+    } else {
+      const newClassInfo = await getClass(e.target.value);
+
+      if (e.target.value !== "Mage") {
+        nInfo.actions = nInfo.actions.filter((v, i) => {
+          return v.name !== "Magic Bolt";
+        });
+      }
+      console.log(Object.keys(newClassInfo.skills));
+      Object.keys(newClassInfo.skills).forEach((pos) => {
+        console.log(pos);
+        if (newInfo.level >= parseInt(pos)) {
+          nInfo.actions.push(...newClassInfo.skills[pos]);
+        }
+      });
+    }
+    console.log("done!");
+
+    setNewInfo(nInfo);
   };
 
   if (!info || !info.level) {
@@ -151,20 +191,25 @@ function CharacterSettings({}) {
         />
         <br />
         <label htmlFor="class">Class: </label>
-        <select
-          id="class"
-          onChange={(e) =>
-            setNewInfo((old) => ({ ...old, ...{ class: e.target.value } }))
-          }
-          value={newInfo.class}
-        >
-          <option value="none">--</option>
-          <option value="fighter">Fighter</option>
-          <option value="healer">Healer</option>
-          <option value="mage">Mage</option>
-          <option value="rogue">Rogue</option>
-          <option value="loser">Loser</option>
-        </select>
+        {[1, 20, 40, 60, 80, 100, 120]
+          .slice(0, Math.ceil(newInfo.level / 20))
+          .map((l) => {
+            return (
+              <select
+                key={l}
+                id="class"
+                onChange={changeClass}
+                value={newInfo.class[0]}
+              >
+                <option value="none">--</option>
+                <option value="fighter">Fighter</option>
+                <option value="healer">Healer</option>
+                <option value="mage">Mage</option>
+                <option value="rogue">Rogue</option>
+                <option value="loser">Loser</option>
+              </select>
+            );
+          })}
         <br />
         {Object.keys(info.attributes).map((atr) => {
           return (

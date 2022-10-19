@@ -504,30 +504,134 @@ function CharacterSheet({}) {
             </div>
           </Box>
           <Box style={{ width: 600, height: 469, alignContent: "center" }}>
-            <button style={{ width: 50 }} onClick={() => roll(4)}>
-              D4
-            </button>
-            <button style={{ width: 50 }} onClick={() => roll(6)}>
-              D6
-            </button>
-            <button style={{ width: 50 }} onClick={() => roll(8)}>
-              D8
-            </button>
-            <button style={{ width: 50 }} onClick={() => roll(10)}>
-              D10
-            </button>
-            <button style={{ width: 50 }} onClick={() => roll(12)}>
-              D12
-            </button>
-            <button style={{ width: 50 }} onClick={() => roll(20)}>
-              D20
-            </button>
+            <h3 style={{ margin: 0 }}>Actions</h3>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                borderBottomStyle: "solid",
+                borderTopStyle: "solid",
+                paddingTop: 10,
+                paddingBottom: 10,
+              }}
+            >
+              <button
+                style={{ width: 50, marginLeft: 20, marginRight: 20 }}
+                onClick={() => roll(4)}
+              >
+                D4
+              </button>
+              <button
+                style={{ width: 50, marginLeft: 20, marginRight: 20 }}
+                onClick={() => roll(6)}
+              >
+                D6
+              </button>
+              <button
+                style={{ width: 50, marginLeft: 20, marginRight: 20 }}
+                onClick={() => roll(8)}
+              >
+                D8
+              </button>
+              <button
+                style={{ width: 50, marginLeft: 20, marginRight: 20 }}
+                onClick={() => roll(10)}
+              >
+                D10
+              </button>
+              <button
+                style={{ width: 50, marginLeft: 20, marginRight: 20 }}
+                onClick={() => roll(12)}
+              >
+                D12
+              </button>
+              <button
+                style={{ width: 50, marginLeft: 20, marginRight: 20 }}
+                onClick={() => roll(20)}
+              >
+                D20
+              </button>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {info.actions === "none"
+                ? null
+                : info.actions.map((a) => {
+                    const player = info;
+                    return (
+                      <div
+                        key={a.name}
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          borderBottomStyle: "dashed",
+                          borderWidth: "thin",
+                        }}
+                      >
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <h4 style={{ margin: 0 }} title={a.description}>
+                            {a.name}
+                          </h4>
+                          <h6 style={{ margin: 0 }}>
+                            <i>{(a.tags || []).join()}</i>
+                          </h6>
+                        </div>
+                        {Object.keys(a).map((v) => {
+                          if (
+                            [
+                              "name",
+                              "description",
+                              "skillLevel",
+                              "tags",
+                            ].includes(v)
+                          ) {
+                            return null;
+                          }
+                          const val = a[v];
+                          const sl = a.skillLevel;
+                          return (
+                            <h5
+                              key={a.name + " " + v}
+                              style={{
+                                marginTop: 0,
+                                marginBottom: 0,
+                                marginRight: 0,
+                                marginLeft: 10,
+                                fontWeight:
+                                  { force: 800, piercing: "normal" }[
+                                    val.type
+                                  ] || "bold",
+                                color: {
+                                  fire: "orange",
+                                  water: "darkblue",
+                                  earth: "darkgray",
+                                  air: "#dcadf5",
+                                  poision: "#5dc55d",
+                                  acid: "green",
+                                  disease: "#8ad8ab",
+                                  pure: "lightcyan",
+                                  dark: "#351c75",
+                                  light: "lightyellow",
+                                  mana: "blue",
+                                  hp: "red",
+                                  sta: "#ffee2fed",
+                                }[(val.type || "").toLowerCase()],
+                              }}
+                            >
+                              {val.beginner || ""}
+                              {eval(val.value) || ""} {val.type || ""} {v || ""}
+                            </h5>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+            </div>
           </Box>
         </div>
-        {/* <p>
-          {`VIT: ${info.attributes.vit} 
-WIS: ${info.attributes.wis}`}
-        </p> */}
       </div>
       {result !== "none" ? (
         <Box
