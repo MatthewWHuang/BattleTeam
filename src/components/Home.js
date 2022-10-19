@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
 import firebaseConfig from "../FirebaseCreds";
 import { Link } from "react-router-dom";
-import { getCharacters } from "../api/CharacterAPI";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Auth.context";
 
@@ -16,33 +15,6 @@ function Home({ globalVals, setGlobalVals }) {
   const [characterName, setCharacterName] = useState("");
   const { state, logIn } = useContext(AuthContext);
 
-  const loadCharacter = async (e) => {
-    e.preventDefault();
-    document.title =
-      characterName.charAt(0).toUpperCase() +
-      characterName.slice(1) +
-      "'s Character Sheet - Battle Team";
-    // const citiesCol = collection(db, "characters");
-    // const citySnapshot = await getDocs(citiesCol);
-    // const cityList = citySnapshot.docs.map((doc) => doc.data());
-    // console.log(cityList);
-    const characterList = getCharacters();
-    const characterID = "";
-    for (let character in Object.keys(characterList)) {
-      if (
-        characterName.toLowerCase() === characterList[character].toLowerCase()
-      ) {
-        characterID = character;
-      }
-    }
-    navigate("/character/" + characterID);
-    // const characterRef = ref(db, "characters/" + characterID);
-    // onValue(characterRef, (snapshot) => {
-    //   const data = snapshot.val();
-    //   console.log(data);
-    //   // setCharacter(data);
-    // });
-  };
   const characterSelectChanged = (e) => {
     setCharacterName(e.target.value);
   };
@@ -73,26 +45,6 @@ function Home({ globalVals, setGlobalVals }) {
         justifyContent: "center",
       }}
     >
-      <div style={{ flexDirection: "column", display: "none" }}>
-        <form>
-          <label>Character </label>
-          <input
-            type="text"
-            onChange={characterSelectChanged}
-            value={characterName}
-          ></input>
-          {/* <button type="submit" onClick={loadCharacter}>
-            GO
-          </button> */}
-          {/* <Link to={"/character/" + characterName}> */}
-          <button onClick={loadCharacter}>GO</button>
-          {/* </Link> */}
-        </form>
-        <Link to={"/create/character/"}>
-          <button onClick={createCharacter}>Create New Character</button>
-        </Link>
-        <button onClick={enterAdmin}>enter admin mode</button>
-      </div>
       {state.loggedIn ? (
         <div style={{ marginRight: 50 }}>
           <ul>

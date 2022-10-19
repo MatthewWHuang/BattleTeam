@@ -1,7 +1,8 @@
-import { createNewCharacter, getCharacters } from "../api/CharacterAPI";
+import { createNewCharacter, idsToInfo } from "../api/CharacterAPI";
 import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/Auth.context";
+import { getCharacters } from "../api/AuthAPI";
 function CharacterCreate({}) {
   //   const blankCharacter = useBlankCharacter();
   const [entered, setEntered] = useState(false);
@@ -34,14 +35,22 @@ function CharacterCreate({}) {
   useEffect(() => {
     document.title = "Create Character - Battle Team";
     const loadChars = async () => {
-      const info = await getCharacters();
+      const ids = await getCharacters(state.username);
+      const names = await idsToInfo(ids);
+      var info = Object.keys(names).map((id) => {
+        const idVal = names[id];
+        return {
+          id,
+          ...idVal,
+        };
+      });
       setCharacters(info);
       console.log(Object.keys(info).length);
     };
     loadChars();
   });
 
-  if (Object.keys(characters).length >= 3) {
+  if (!state.admin && Object.keys(characters).length >= 3) {
     return (
       <div>
         <h2>

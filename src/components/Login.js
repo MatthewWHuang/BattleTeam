@@ -8,14 +8,17 @@ function Login({}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [notification, setNotification] = useState("");
-  const { state, logIn } = useContext(AuthContext);
+  const { state, logIn, openAdmin } = useContext(AuthContext);
 
   const handleLoginPress = async (e) => {
     e.preventDefault();
-    const status = await login(username, password);
+    const [status, admin] = await login(username, password);
     if (status === "success") {
       navigate("/");
-      logIn(username);
+      logIn(username, admin);
+      if (admin) {
+        openAdmin();
+      }
       localStorage.setItem("username", username);
       localStorage.setItem("password", password);
     } else if (status === "incorrect") {

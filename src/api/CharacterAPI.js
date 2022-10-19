@@ -37,41 +37,41 @@ function useBlankCharacter() {
   }, []);
   return info;
 }
-async function getCharacters() {
-  // const [info, setInfo] = useEffect([]);
-  // const listRef = ref(db, "characters");
+// async function getCharacters() {
+//   // const [info, setInfo] = useEffect([]);
+//   // const listRef = ref(db, "characters");
 
-  // onValue(
-  //   listRef,
-  //   (snapshot) => {
-  //     const data = snapshot.val();
-  //     var mapped = data.map((c) => c.name);
-  //     // setInfo(mapped);
-  //     return mapped;
-  //   },
-  //   {
-  //     onlyOnce: true,
-  //   }
-  // );
-  // return info;
-  const dbRef = ref(db);
-  const snapshot = await get(child(dbRef, "characters"));
+//   // onValue(
+//   //   listRef,
+//   //   (snapshot) => {
+//   //     const data = snapshot.val();
+//   //     var mapped = data.map((c) => c.name);
+//   //     // setInfo(mapped);
+//   //     return mapped;
+//   //   },
+//   //   {
+//   //     onlyOnce: true,
+//   //   }
+//   // );
+//   // return info;
+//   const dbRef = ref(db);
+//   const snapshot = await get(child(dbRef, "characters"));
 
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    return data;
-  } else {
-    return [];
-  }
-  // onValue(
-  //   usersRef,
-  //   (snapshot) => {
-  //     const data = snapshot.val();
-  //     return data.password === pass;
-  //   },
-  //   { onlyOnce: true }
-  // );
-}
+//   if (snapshot.exists()) {
+//     const data = snapshot.val();
+//     return data;
+//   } else {
+//     return [];
+//   }
+//   // onValue(
+//   //   usersRef,
+//   //   (snapshot) => {
+//   //     const data = snapshot.val();
+//   //     return data.password === pass;
+//   //   },
+//   //   { onlyOnce: true }
+//   // );
+// }
 async function createNewCharacter(name, username) {
   // const [info, setInfo] = useState({});
   const characterRef = ref(db, "blankCharacter");
@@ -163,7 +163,7 @@ export {
   useBlankCharacter,
   createNewCharacter,
   updateCharacter,
-  getCharacters,
+  // getCharacters,
   getCharacter,
   idsToInfo,
   deleteCharacter,

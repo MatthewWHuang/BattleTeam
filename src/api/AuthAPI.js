@@ -24,12 +24,12 @@ async function login(username, pass) {
     const data = snapshot.val();
     const hPass = await sha1(pass);
     if (hPass === data.password) {
-      return "success";
+      return ["success", data.admin];
     } else {
-      return "incorrect";
+      return ["incorrect"];
     }
   } else {
-    return "error";
+    return ["error"];
   }
   // onValue(
   //   usersRef,
@@ -51,7 +51,7 @@ async function signup(username, pass) {
       return "usernametaken";
     } else {
       const hPass = await sha1(pass);
-      set(accountRef, { characters: "none", password: hPass });
+      set(accountRef, { characters: "none", password: hPass, admin: false });
       return "success";
     }
   } else {

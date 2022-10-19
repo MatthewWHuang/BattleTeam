@@ -5,20 +5,23 @@ import { AuthContext } from "../context/Auth.context";
 import login from "../api/AuthAPI";
 
 function Root({}) {
-  const { state, logIn } = useContext(AuthContext);
+  const { state, logIn, openAdmin } = useContext(AuthContext);
 
   useEffect(() => {
-    const getSavedUser = async () => {
-      const savedUsername = localStorage.getItem("username");
-      const status = await login(
-        savedUsername,
-        localStorage.getItem("password")
-      );
-      if (savedUsername && status === "success") {
-        logIn(savedUsername);
-      }
-    };
-    getSavedUser();
+    if (!state.loggedIn) {
+      const getSavedUser = async () => {
+        const savedUsername = localStorage.getItem("username");
+        const [status, admin] = await login(
+          savedUsername,
+          localStorage.getItem("password")
+        );
+        console.log(status, admin);
+        if (savedUsername && status === "success") {
+          logIn(savedUsername, admin);
+        }
+      };
+      getSavedUser();
+    }
   }, []);
   return (
     <div>
