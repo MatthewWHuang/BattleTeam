@@ -622,7 +622,8 @@ function CharacterSheet({}) {
                               }}
                             >
                               {val.beginner || ""}
-                              {eval(val.value) || ""} {val.type || ""} {v || ""}
+                              {eval(val.value) || ""}
+                              {val.ender || ""} {val.type || ""} {v || ""}
                             </h5>
                           );
                         })}
