@@ -87,7 +87,7 @@ function CharacterList({}) {
             ) : (
               <div>
                 <h4>
-                  You do not have any characters yet.
+                  You do not have any characters yet.{" "}
                   <Link to="/create/character">Create one</Link> now!
                 </h4>
               </div>

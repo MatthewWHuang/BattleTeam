@@ -14,7 +14,7 @@ import {
   faGrinTongueSquint,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import getClass from "../api/ClassAPI";
+import getClass, { getClasses } from "../api/ClassAPI";
 import getBaseSkill from "../api/SkillAPI";
 
 function CharacterSettings({}) {
@@ -26,6 +26,7 @@ function CharacterSettings({}) {
   const info = useCharacter(characterID);
   const [newInfo, setNewInfo] = useState({});
   const [classInfo, setClassInfo] = useState({});
+  const [classes, setClasses] = useState([]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -46,7 +47,12 @@ function CharacterSettings({}) {
         }
       }
     };
+    const loadClasses = async () => {
+      const data = await getClasses();
+      setClasses(data);
+    };
     getClassInfo();
+    loadClasses();
   }, [info, newInfo]);
   // useEffect(() => {
   //   const characterRef = ref(db, "characters/" + characterName);
@@ -180,7 +186,11 @@ function CharacterSettings({}) {
           // style={{ display: "inline" }}
           type="number"
           onChange={(e) => {
-            if (e.target.value >= 1 && e.target.value % 1 === 0) {
+            if (
+              e.target.value >= 1 &&
+              e.target.value % 1 === 0 &&
+              e.target.value <= 120
+            ) {
               setNewInfo((old) => ({ ...old, ...{ level: e.target.value } }));
             }
           }}
@@ -188,25 +198,27 @@ function CharacterSettings({}) {
           id="level"
           min={1}
           step={1}
+          max={120}
         />
         <br />
         <label htmlFor="class">Class: </label>
         {[1, 20, 40, 60, 80, 100, 120]
-          .slice(0, Math.ceil(newInfo.level / 20))
+          .slice(0, Math.ceil((parseInt(newInfo.level) + 1) / 20))
           .map((l) => {
+            console.log(l, parseInt(newInfo.level) + 1);
             return (
               <select
-                key={l}
+                key={"classSelect" + String(l)}
                 id="class"
                 onChange={changeClass}
                 value={newInfo.class[0]}
               >
                 <option value="none">--</option>
-                <option value="fighter">Fighter</option>
-                <option value="healer">Healer</option>
-                <option value="mage">Mage</option>
-                <option value="rogue">Rogue</option>
-                <option value="loser">Loser</option>
+                {Object.keys(classes).map((c) => (
+                  <option key={c} value={c}>
+                    {classes[c].name}
+                  </option>
+                ))}
               </select>
             );
           })}

@@ -27,4 +27,17 @@ async function getClass(cls) {
   }
 }
 
+async function getClasses() {
+  const dbRef = ref(db);
+  const snapshot = await get(child(dbRef, `classes`));
+
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return data;
+  } else {
+    return [];
+  }
+}
+
 export default getClass;
+export { getClasses };
