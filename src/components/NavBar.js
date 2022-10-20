@@ -91,7 +91,7 @@ function NavBar({}) {
                     width: 150,
                   }}
                 >
-                  {state.username === "Turbo" ? (
+                  {state.username === "rickrollme" ? (
                     <a href="https://rr.noordstar.me/data/e0cffb66">
                       <h3
                         style={{

@@ -49,7 +49,7 @@ function Home({ globalVals, setGlobalVals }) {
         <div style={{ marginRight: 50 }}>
           <ul>
             <li>
-              {state.username === "Turbo" ? null : (
+              {state.username === "rickrollme" ? null : (
                 <Link to="/list/characters">
                   <p>View my characters</p>
                 </Link>
