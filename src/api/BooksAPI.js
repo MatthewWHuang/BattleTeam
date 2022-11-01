@@ -1,41 +1,11 @@
-import { initializeApp } from "firebase/app";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  push,
-  set,
-  update,
-  get,
-  child,
-} from "firebase/database";
-import firebaseConfig from "../FirebaseCreds";
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase();
+import { get } from "./FirebaseAPI";
 
 async function getBooks() {
-  const dbRef = ref(db);
-  const snapshot = await get(child(dbRef, `books`));
-
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    return data;
-  } else {
-    return [];
-  }
+  return await get("books");
 }
 
 async function getBook(book) {
-  const dbRef = ref(db);
-  const snapshot = await get(child(dbRef, `books/${book}`));
-
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    return data;
-  } else {
-    return `No Such Book ${book} Exists`;
-  }
+  return await get(`books/${book}`);
 }
 
 export default getBooks;

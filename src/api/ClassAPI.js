@@ -1,42 +1,11 @@
-import { initializeApp } from "firebase/app";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  push,
-  set,
-  update,
-  get,
-  child,
-} from "firebase/database";
-import firebaseConfig from "../FirebaseCreds";
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase();
+import { get } from "./FirebaseAPI";
 
 async function getClass(cls) {
-  //   const accountRef = ref(db, `accounts/${username}/characters`);
-  const dbRef = ref(db);
-  const snapshot = await get(child(dbRef, `classes/${cls}`));
-
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    return data;
-  } else {
-    return {};
-  }
+  return await get(`classes/${cls}`);
 }
 
 async function getClasses() {
-  const dbRef = ref(db);
-  const snapshot = await get(child(dbRef, `classes`));
-
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    return data;
-  } else {
-    return [];
-  }
+  return await get(`classes`);
 }
 
 export default getClass;

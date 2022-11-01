@@ -1,169 +1,63 @@
-import { initializeApp } from "firebase/app";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  push,
-  set,
-  update,
-  get,
-  child,
-  remove,
-} from "firebase/database";
-import firebaseConfig from "../FirebaseCreds";
-import { useState, useEffect } from "react";
+import { push } from "firebase/database";
+import { del, get, listen, set, update, getKey } from "./FirebaseAPI";
+import { useEffect, useState } from "react";
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase();
 function useCharacter(id) {
   const [info, setInfo] = useState({});
-  const characterRef = ref(db, "characters/" + id);
   useEffect(() => {
-    onValue(characterRef, (snapshot) => {
-      const data = snapshot.val();
+    listen(`characters/${id}`, (data) => {
       setInfo(data);
     });
   }, []);
   return info;
 }
-function useBlankCharacter() {
-  const [info, setInfo] = useState({});
-  const characterRef = ref(db, "blankCharacter");
-  useEffect(() => {
-    onValue(characterRef, (snapshot) => {
-      const data = snapshot.val();
-      setInfo(data);
-    });
-  }, []);
-  return info;
-}
-// async function getCharacters() {
-//   // const [info, setInfo] = useEffect([]);
-//   // const listRef = ref(db, "characters");
 
-//   // onValue(
-//   //   listRef,
-//   //   (snapshot) => {
-//   //     const data = snapshot.val();
-//   //     var mapped = data.map((c) => c.name);
-//   //     // setInfo(mapped);
-//   //     return mapped;
-//   //   },
-//   //   {
-//   //     onlyOnce: true,
-//   //   }
-//   // );
-//   // return info;
-//   const dbRef = ref(db);
-//   const snapshot = await get(child(dbRef, "characters"));
-
-//   if (snapshot.exists()) {
-//     const data = snapshot.val();
-//     return data;
-//   } else {
-//     return [];
-//   }
-//   // onValue(
-//   //   usersRef,
-//   //   (snapshot) => {
-//   //     const data = snapshot.val();
-//   //     return data.password === pass;
-//   //   },
-//   //   { onlyOnce: true }
-//   // );
-// }
 async function createNewCharacter(name, username) {
-  // const [info, setInfo] = useState({});
-  const characterRef = ref(db, "blankCharacter");
-  // const [characters, setCharacters] = getCharacterNames();
+  const blankCharacter = await get("blankCharacter");
 
-  // useEffect(() => {}, [characters]);
-  // const characterCount =
-  //   characters !== null ? (characters.length + 1).toString() : "Loading";
-  const charID = push(characterRef).key;
+  const charID = getKey("blankCharacter");
 
-  const dbRef = ref(db);
+  let newCharacter = { ...blankCharacter };
+  newCharacter.name = name;
+  newCharacter.owner = username;
+  const updates = {};
+  updates[charID] = newCharacter;
+  update("characters", updates);
 
-  // useEffect(() => {
+  const listData = await get(`accounts/${username}/characters`);
 
-  const snapshot = await get(child(dbRef, `blankCharacter`));
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    // console.log(data);
-    // setInfo(data);
-    // const listRef = ref(db, "characters");
-    // const newListRef = push(listRef);
-    data.name = name;
-    const updates = {};
-    updates[charID] = data;
-    update(ref(db, "characters"), updates);
+  set(
+    `accounts/${username}/characters`,
+    listData === "none" ? [charID] : listData.concat(charID)
+  );
 
-    const accountSnapshot = await get(
-      child(dbRef, `accounts/${username}/characters`)
-    );
-    if (accountSnapshot.exists()) {
-      const listData = accountSnapshot.val();
-
-      const accountRef = ref(db, `accounts/${username}/characters`);
-
-      set(accountRef, listData === "none" ? [charID] : listData.concat(charID));
-    }
-    return charID;
-  }
-  // }, []);
-
-  // useEffect(() => {
-  //   onValue(characterRef, (snapshot) => {
-  //     const data = snapshot.val();
-  //     console.log(data);
-  //     setInfo(data);
-  //   });
-  // }, []);
-  // return info;
+  return charID;
 }
 
 function updateCharacter(id, info) {
-  const characterRef = ref(db, "characters/" + id);
-  set(characterRef, info);
-  return true;
+  set(`characters/${id}`, info);
 }
 
 async function getCharacter(id) {
-  const dbRef = ref(db);
-
-  const snapshot = await get(child(dbRef, `characters/${id}`));
-
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    return data;
-  }
+  return await get(`characters/${id}`);
 }
 
 async function deleteCharacter(id) {
-  const characterRef = ref(db, "characters/" + id);
-  remove(characterRef);
+  del(`characters/${id}`);
 }
 
 async function idsToInfo(ids) {
-  const dbRef = ref(db);
-
   const names = {};
   for (let id of ids) {
-    const snapshot = await get(child(dbRef, `characters/${id}`));
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      names[id] = data;
-    }
+    names[id] = await get(`characters/${id}`);
   }
   return names;
 }
 
 export default useCharacter;
 export {
-  useBlankCharacter,
   createNewCharacter,
   updateCharacter,
-  // getCharacters,
   getCharacter,
   idsToInfo,
   deleteCharacter,

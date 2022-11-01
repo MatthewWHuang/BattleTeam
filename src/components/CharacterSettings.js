@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import getClass, { getClasses } from "../api/ClassAPI";
 import getBaseSkill from "../api/SkillAPI";
+import { removeCharacterFromAccount } from "../api/AuthAPI";
 
 function CharacterSettings({}) {
   // let [searchParams, setSearchParams] = useSearchParams();
@@ -89,6 +90,7 @@ function CharacterSettings({}) {
       )
     ) {
       deleteChar(characterID);
+      removeCharacterFromAccount(info.owner, characterID);
       navigate("/");
     }
   };
