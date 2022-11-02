@@ -55,15 +55,6 @@ function CharacterSettings({}) {
     getClassInfo();
     loadClasses();
   }, [info, newInfo]);
-  // useEffect(() => {
-  //   const characterRef = ref(db, "characters/" + characterName);
-  //   onValue(characterRef, (snapshot) => {
-  //     const data = snapshot.val();
-  //     console.log(data);
-  //     // setCharacter(data);
-  //     setInfo(data);
-  //   });
-  // }, []);
 
   const update = (e) => {
     e.preventDefault();
@@ -78,6 +69,21 @@ function CharacterSettings({}) {
         ...newInfo.attributes,
         [e.target.id]: newInfo.attributes[e.target.id] + 1,
       },
+    });
+  };
+
+  const actionIncreaseClicked = (e) => {
+    e.preventDefault();
+    console.log("eaaw", e.target.id);
+    setNewInfo({
+      ...newInfo,
+      actions: Object.values({
+        ...newInfo.actions,
+        [e.target.id]: {
+          ...newInfo.actions[e.target.id],
+          skillLevel: newInfo.actions[e.target.id].skillLevel + 1,
+        },
+      }),
     });
   };
 
@@ -149,7 +155,7 @@ function CharacterSettings({}) {
     }
   };
 
-  if (!info || !info.level) {
+  if (!info || !info.level || !newInfo || !newInfo.level) {
     return (
       <div
         style={{
@@ -189,135 +195,181 @@ function CharacterSettings({}) {
           </div>
         </div>
       </div>
-      <form style={{ justifyContent: "left" }}>
-        <label
-          // style={{ display: "inline" }}
-          htmlFor="name"
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+          }}
         >
-          Name:
-        </label>
-        <input
-          // style={{ display: "inline" }}
-          type="text"
-          onChange={(e) =>
-            setNewInfo((old) => ({ ...old, ...{ name: e.target.value } }))
-          }
-          value={newInfo.name || ""}
-          id="name"
-        />
-        <br />
-        <label htmlFor="level">Level: </label>
-        <input
-          // style={{ display: "inline" }}
-          type="number"
-          onChange={changeLevel}
-          value={newInfo.level || 1}
-          id="level"
-          min={1}
-          step={1}
-          max={120}
-        />
-        <br />
-        <label htmlFor="class">Class: </label>
-        {[1, 20, 40, 60, 80, 100, 120]
-          .slice(0, Math.ceil((parseInt(newInfo.level) + 1) / 20))
-          .map((l) => {
-            return (
-              <select
-                key={"classSelect" + String(l)}
-                id="class"
-                onChange={changeClass}
-                value={newInfo.class[0]}
+          <h3 style={{ margin: 0 }}>MAIN</h3>
+          <div
+            style={{
+              paddingLeft: 10,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <div>
+              <label
+                // style={{ display: "inline" }}
+                htmlFor="name"
               >
-                <option value="none">--</option>
-                {Object.keys(classes).map((c) => (
-                  <option key={c} value={c}>
-                    {classes[c].name}
-                  </option>
-                ))}
-              </select>
-            );
-          })}
-        <br />
-        {Object.keys(info.attributes).map((atr) => {
-          return (
-            <div key={atr}>
-              <label htmlFor={atr}>{atr.toUpperCase()}: </label>
-              <p style={{ display: "inline" }}>
-                {newInfo.attributes
-                  ? newInfo.attributes[atr] +
-                    (classInfo && classInfo.stats
-                      ? (classInfo.stats.begin[atr] || 0) +
-                        (classInfo.stats.level[atr] || 0) * newInfo.level
-                      : 0)
-                  : 10}
-              </p>
-              {newInfo.attributes ? (
-                Object.values(
-                  Object.keys(info.attributes).map(
-                    (a) =>
-                      newInfo.attributes[a] +
-                      (classInfo && classInfo.stats
-                        ? (classInfo.stats.begin[a] || 0) +
-                          (classInfo.stats.level[a] || 0) * newInfo.level
-                        : 0)
-                  )
-                ).reduce((a, b) => a + b, 0) >=
-                65 +
-                  ((newInfo.level - 1) * 5 +
-                    (newInfo.class !== "none"
-                      ? Object.keys(info.attributes)
-                          .map((s) => {
-                            if (
-                              classInfo &&
-                              classInfo.stats &&
-                              Object.keys(classInfo.stats.begin).includes(s)
-                            ) {
-                              return (
-                                classInfo.stats.begin[s] +
-                                classInfo.stats.level[s] * newInfo.level
-                              );
-                            } else {
-                              return 0;
-                            }
-                          })
-                          .reduce((a, b) => a + b, 0)
-                      : 0)) ? null : (
+                Name:{" "}
+              </label>
+              <input
+                type="text"
+                onChange={(e) =>
+                  setNewInfo((old) => ({ ...old, ...{ name: e.target.value } }))
+                }
+                value={newInfo.name || ""}
+                id="name"
+              />
+            </div>
+            <div>
+              <label htmlFor="level">Level: </label>
+              <input
+                type="number"
+                onChange={changeLevel}
+                value={newInfo.level || 1}
+                id="level"
+                min={1}
+                step={1}
+                max={120}
+              />
+            </div>
+            <div>
+              <label htmlFor="class">Class: </label>
+              {[1, 20, 40, 60, 80, 100, 120]
+                .slice(0, Math.ceil((parseInt(newInfo.level) + 1) / 20))
+                .map((l) => {
+                  return (
+                    <select
+                      key={"classSelect" + String(l)}
+                      id="class"
+                      onChange={changeClass}
+                      value={newInfo.class[0]}
+                    >
+                      <option value="none">--</option>
+                      {Object.keys(classes).map((c) => (
+                        <option key={c} value={c}>
+                          {classes[c].name}
+                        </option>
+                      ))}
+                    </select>
+                  );
+                })}
+            </div>
+          </div>
+          <br />
+          <h3 style={{ margin: 0 }}>ATTRIBUTES</h3>
+          <div style={{ paddingLeft: 10 }}>
+            {Object.keys(info.attributes).map((atr) => {
+              return (
+                <div
+                  key={atr}
+                  style={{ display: "flex", flexDirection: "row" }}
+                >
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <label htmlFor={atr}>
+                      {atr.toUpperCase()}:{"  "}
+                    </label>
+                    <p style={{ display: "inline", margin: 0, marginLeft: 5 }}>
+                      {newInfo.attributes
+                        ? newInfo.attributes[atr] +
+                          (classInfo && classInfo.stats
+                            ? (classInfo.stats.begin[atr] || 0) +
+                              (classInfo.stats.level[atr] || 0) * newInfo.level
+                            : 0)
+                        : 10}
+                    </p>
+                  </div>
+                  {newInfo.attributes ? (
+                    Object.values(
+                      Object.keys(info.attributes).map(
+                        (a) =>
+                          newInfo.attributes[a] +
+                          (classInfo && classInfo.stats
+                            ? (classInfo.stats.begin[a] || 0) +
+                              (classInfo.stats.level[a] || 0) * newInfo.level
+                            : 0)
+                      )
+                    ).reduce((a, b) => a + b, 0) >=
+                    65 +
+                      ((newInfo.level - 1) * 5 +
+                        (newInfo.class !== "none"
+                          ? Object.keys(info.attributes)
+                              .map((s) => {
+                                if (
+                                  classInfo &&
+                                  classInfo.stats &&
+                                  Object.keys(classInfo.stats.begin).includes(s)
+                                ) {
+                                  return (
+                                    classInfo.stats.begin[s] +
+                                    classInfo.stats.level[s] * newInfo.level
+                                  );
+                                } else {
+                                  return 0;
+                                }
+                              })
+                              .reduce((a, b) => a + b, 0)
+                          : 0)) ? null : (
+                      <button
+                        style={{ padding: 0, marginLeft: 5 }}
+                        id={atr}
+                        onClick={attributeIncreaseClicked}
+                      >
+                        +
+                      </button>
+                    )
+                  ) : (
+                    <div />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <br />
+          <h3 style={{ margin: 0 }}>ACTIONS</h3>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              paddingLeft: 10,
+            }}
+          >
+            {newInfo.actions.map((s, pos) => (
+              <div
+                style={{ display: "flex", flexDirection: "row" }}
+                key={String(pos) + " " + s.name}
+              >
+                <p style={{ margin: 0 }}>
+                  {s.name}({s.name === "Unarmed Attack" ? "N/A" : s.skillLevel})
+                </p>
+                {s.name === "Unarmed Attack" ? null : parseInt(newInfo.level) +
+                    (newInfo.class === "none" ? 1 : 3) -
+                    newInfo.actions
+                      .map((s) => s.skillLevel)
+                      .reduce((a, b) => a + b, 0) >
+                  0 ? (
                   <button
                     style={{ padding: 0, marginLeft: 5 }}
-                    id={atr}
-                    onClick={attributeIncreaseClicked}
+                    id={String(pos)}
+                    onClick={actionIncreaseClicked}
                   >
                     +
                   </button>
-                )
-              ) : (
-                <div />
-              )}
-
-              {/* <input
-                // style={{ display: "inline" }}
-                type="number"
-                onChange={(e) =>
-                  setNewInfo((old) => ({
-                    ...old,
-                    ...{
-                      attributes: {
-                        ...old.attributes,
-                        [atr]: e.target.value,
-                      },
-                    },
-                  }))
-                }
-                value={newInfo.attributes ? newInfo.attributes[atr] : 10}
-                id={atr}
-                style={{ width: 40 }}
-              /> */}
-            </div>
-          );
-        })}
-        <button onClick={update}>UPDATE</button>
-      </form>
+                ) : null}
+              </div>
+            ))}
+          </div>
+          <button onClick={update}>UPDATE</button>
+        </form>
+      </div>
     </div>
   );
 }

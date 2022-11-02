@@ -625,7 +625,7 @@ function CharacterSheet({}) {
                                         poision: "#5dc55d",
                                         acid: "green",
                                         disease: "#8ad8ab",
-                                        pure: "lightcyan",
+                                        pure: "cyan",
                                         dark: "#351c75",
                                         light: "lightyellow",
                                         mana: "blue",
