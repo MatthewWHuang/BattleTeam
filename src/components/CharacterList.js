@@ -42,7 +42,7 @@ function CharacterList({}) {
         ) : (
           <div>
             <h1>
-              MY CHARACTERS({characters.length}/{state.admin ? "∞" : "3"})
+              MY CHARACTERS({characters.length}/{state.admin ? "∞" : "8"})
             </h1>
             {characters.length > 0 ? (
               characters.map((c) => {
