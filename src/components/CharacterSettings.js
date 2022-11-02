@@ -113,11 +113,14 @@ function CharacterSettings({}) {
           return v.name !== "Magic Bolt";
         });
       }
-      Object.keys(newClassInfo.skills).forEach((pos) => {
-        if (newInfo.level >= parseInt(pos)) {
-          nInfo.actions.push(...newClassInfo.skills[pos]);
-        }
-      });
+      Object.keys(newClassInfo.skills)
+        .map((pos) => [pos, parseInt(pos)])
+        .sort((a, b) => a[1] - b[1])
+        .forEach((pos) => {
+          if (newInfo.level >= pos[1]) {
+            nInfo.actions.push(...newClassInfo.skills[pos[0]]);
+          }
+        });
     }
     setNewInfo(nInfo);
   };
@@ -245,7 +248,7 @@ function CharacterSettings({}) {
                   ? newInfo.attributes[atr] +
                     (classInfo && classInfo.stats
                       ? (classInfo.stats.begin[atr] || 0) +
-                        (classInfo.stats.level[atr] || 0) * (newInfo.level - 1)
+                        (classInfo.stats.level[atr] || 0) * newInfo.level
                       : 0)
                   : 10}
               </p>
@@ -256,7 +259,7 @@ function CharacterSettings({}) {
                       newInfo.attributes[a] +
                       (classInfo && classInfo.stats
                         ? (classInfo.stats.begin[a] || 0) +
-                          (classInfo.stats.level[a] || 0) * (newInfo.level - 1)
+                          (classInfo.stats.level[a] || 0) * newInfo.level
                         : 0)
                   )
                 ).reduce((a, b) => a + b, 0) >=
@@ -272,7 +275,7 @@ function CharacterSettings({}) {
                             ) {
                               return (
                                 classInfo.stats.begin[s] +
-                                classInfo.stats.level[s] * (info.level - 1)
+                                classInfo.stats.level[s] * newInfo.level
                               );
                             } else {
                               return 0;

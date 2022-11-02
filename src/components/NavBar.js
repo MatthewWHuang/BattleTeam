@@ -47,6 +47,7 @@ function NavBar({}) {
                   marginLeft: 20,
                   marginRight: 20,
                   color: "black",
+                  cursor: "pointer",
                 }}
               >
                 Log In
@@ -62,6 +63,7 @@ function NavBar({}) {
                   marginLeft: 20,
                   marginRight: 20,
                   color: "black",
+                  cursor: "pointer",
                 }}
               >
                 Sign Up
@@ -80,7 +82,9 @@ function NavBar({}) {
                   openMenu === "char" ? setOpenMenu("") : setOpenMenu("char");
                 }}
               >
-                <h3 style={{ marginBottom: 0 }}>Character</h3>
+                <h3 style={{ marginBottom: 0, cursor: "pointer" }}>
+                  Character
+                </h3>
               </div>
               {openMenu === "char" ? (
                 <div
@@ -143,7 +147,9 @@ function NavBar({}) {
                   openMenu === "books" ? setOpenMenu("") : setOpenMenu("books");
                 }}
               >
-                <h3 style={{ marginBottom: 0 }}>Books(WIP, UNSAFE)</h3>
+                <h3 style={{ marginBottom: 0, cursor: "pointer" }}>
+                  Books(WIP, UNSAFE)
+                </h3>
               </div>
               {openMenu === "books" ? (
                 <div

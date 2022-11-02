@@ -7,7 +7,7 @@ function Box({ style, children }) {
         display: "flex",
         flexDirection: "column",
         borderColor: "black",
-        backgroundColor: "lightgray",
+        backgroundColor: "whitesmoke",
         // borderWidth: 10,
         borderStyle: "solid",
         paddingLeft: 10,
@@ -16,6 +16,7 @@ function Box({ style, children }) {
         alignSelf: "flex-start",
         marginBottom: 10,
         marginLeft: 10,
+        boxShadow: "5px 5px gray",
         ...style,
       }}
     >

@@ -572,10 +572,21 @@ function CharacterSheet({}) {
                         <div
                           style={{ display: "flex", flexDirection: "column" }}
                         >
-                          <h4 style={{ margin: 0 }} title={a.description}>
+                          <h4
+                            style={{
+                              margin: 0,
+                              color: a.skillLevel > 0 ? "black" : "gray",
+                            }}
+                            title={a.description}
+                          >
                             {a.name}
                           </h4>
-                          <h6 style={{ margin: 0 }}>
+                          <h6
+                            style={{
+                              margin: 0,
+                              color: a.skillLevel > 0 ? "black" : "gray",
+                            }}
+                          >
                             <i>{(a.tags || []).join()}</i>
                           </h6>
                         </div>
@@ -591,7 +602,7 @@ function CharacterSheet({}) {
                             return null;
                           }
                           const val = a[v];
-                          const sl = a.skillLevel;
+                          const sl = a.skillLevel > 0 ? a.skillLevel : 1;
                           return (
                             <h5
                               key={a.name + " " + v}
@@ -604,26 +615,38 @@ function CharacterSheet({}) {
                                   { force: 800, piercing: "normal" }[
                                     val.type
                                   ] || "bold",
-                                color: {
-                                  fire: "orange",
-                                  water: "darkblue",
-                                  earth: "darkgray",
-                                  air: "#dcadf5",
-                                  poision: "#5dc55d",
-                                  acid: "green",
-                                  disease: "#8ad8ab",
-                                  pure: "lightcyan",
-                                  dark: "#351c75",
-                                  light: "lightyellow",
-                                  mana: "blue",
-                                  hp: "red",
-                                  sta: "#ffbc00",
-                                }[(val.type || "").toLowerCase()],
+                                color:
+                                  a.skillLevel > 0
+                                    ? {
+                                        fire: "orange",
+                                        water: "darkblue",
+                                        earth: "darkgray",
+                                        air: "#dcadf5",
+                                        poision: "#5dc55d",
+                                        acid: "green",
+                                        disease: "#8ad8ab",
+                                        pure: "lightcyan",
+                                        dark: "#351c75",
+                                        light: "lightyellow",
+                                        mana: "blue",
+                                        hp: "red",
+                                        sta: "#ffbc00",
+                                      }[
+                                        (
+                                          val.type ||
+                                          val.rightType ||
+                                          ""
+                                        ).toLowerCase()
+                                      ]
+                                    : "lightgray",
                               }}
                             >
                               {val.beginner || ""}
                               {eval(val.value) || ""}
-                              {val.ender || ""} {val.type || ""} {v || ""}
+                              {val.ender || ""} {val.type || ""} {v || ""}{" "}
+                              {val.rightBeginner || ""}
+                              {eval(val.rightValue) || ""}
+                              {val.rightEnder || ""} {val.rightType || ""}
                             </h5>
                           );
                         })}

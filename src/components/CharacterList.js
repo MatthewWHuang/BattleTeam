@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import { getCharacter, idsToInfo } from "../api/CharacterAPI";
 import { getCharacters } from "../api/AuthAPI";
@@ -7,6 +7,7 @@ import { AuthContext } from "../context/Auth.context";
 
 function CharacterList({}) {
   const { state } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [characters, setCharacters] = useState("loading");
   useEffect(() => {
@@ -46,18 +47,24 @@ function CharacterList({}) {
             {characters.length > 0 ? (
               characters.map((c) => {
                 return (
-                  <Link
-                    to={`/character/${c.id}`}
+                  <div
+                    onClick={() => {
+                      navigate(`/character/${c.id}`);
+                    }}
                     key={c.id}
                     style={{
                       display: "flex",
-                      flexDirection: "row",
+                      flexDirection: "column",
                       justifyContent: "center",
                       alignItems: "center",
                       borderStyle: "solid",
                       width: 400,
                       paddingLeft: 20,
                       paddingRight: 20,
+                      marginTop: 20,
+                      borderRadius: 5,
+                      backgroundColor: "whitesmoke",
+                      cursor: "pointer",
                     }}
                   >
                     <h1
@@ -66,6 +73,7 @@ function CharacterList({}) {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
+                        margin: 0,
                       }}
                     >
                       {c.name}
@@ -76,12 +84,13 @@ function CharacterList({}) {
                         height: "min-content",
                         marginLeft: 25,
                         width: "max-content",
+                        margin: 0,
                       }}
                     >
                       Level {c.level}
                       {c.class != "none" ? " " + c.class : ", no class"}
                     </p>
-                  </Link>
+                  </div>
                 );
               })
             ) : (

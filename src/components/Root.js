@@ -24,7 +24,13 @@ function Root({}) {
     }
   }, []);
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "lightgray",
+        height: "max-content",
+        minHeight: "100vh",
+      }}
+    >
       <NavBar />
       <Outlet />
     </div>
