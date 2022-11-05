@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { getExpForLevel } from "../helpers/CharacterCalcs";
 import Input from "./Input";
+import Item from "./Item";
 function CharacterSheet({}) {
   // let [searchParams, setSearchParams] = useSearchParams();
 
@@ -479,8 +480,22 @@ function CharacterSheet({}) {
         </div>
 
         <div>
-          <Box style={{ height: 200, flexDirection: "row" }}>
-            <div>
+          <Box
+            style={{
+              height: 200,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+            }}
+          >
+            {/* <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                height: "100%",
+              }}
+            >
               {[
                 "Head",
                 "Eyes",
@@ -498,9 +513,23 @@ function CharacterSheet({}) {
                   {s + ": None"}
                 </h6>
               ))}
-            </div>
-            <div>
-              <h5>Inventory Empty</h5>
+            </div> */}
+            <div
+              style={{
+                justifyContent: "center",
+                width: "100%",
+                overflow: "auto",
+              }}
+            >
+              {info.inventory === "empty" ? (
+                <h5>Inventory Empty</h5>
+              ) : (
+                <div>
+                  {info.inventory.map((item, i) => (
+                    <Item key={i} enabled info={item} player={info} />
+                  ))}
+                </div>
+              )}
             </div>
           </Box>
           <Box style={{ width: 600, height: 469, alignContent: "center" }}>
@@ -553,106 +582,25 @@ function CharacterSheet({}) {
                 D20
               </button>
             </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {info.actions === "none"
-                ? null
-                : info.actions.map((a) => {
-                    const player = info;
-                    return (
-                      <div
-                        key={a.name}
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          borderBottomStyle: "dashed",
-                          borderWidth: "thin",
-                        }}
-                      >
-                        <div
-                          style={{ display: "flex", flexDirection: "column" }}
-                        >
-                          <h4
-                            style={{
-                              margin: 0,
-                              color: a.skillLevel > 0 ? "black" : "gray",
-                            }}
-                            title={a.description}
-                          >
-                            {a.name}
-                          </h4>
-                          <h6
-                            style={{
-                              margin: 0,
-                              color: a.skillLevel > 0 ? "black" : "gray",
-                            }}
-                          >
-                            <i>{(a.tags || []).join()}</i>
-                          </h6>
-                        </div>
-                        {Object.keys(a).map((v) => {
-                          if (
-                            [
-                              "name",
-                              "description",
-                              "skillLevel",
-                              "tags",
-                            ].includes(v)
-                          ) {
-                            return null;
-                          }
-                          const val = a[v];
-                          const sl = a.skillLevel > 0 ? a.skillLevel : 1;
-                          return (
-                            <h5
-                              key={a.name + " " + v}
-                              style={{
-                                marginTop: 0,
-                                marginBottom: 0,
-                                marginRight: 0,
-                                marginLeft: 10,
-                                fontWeight:
-                                  { force: 800, piercing: "normal" }[
-                                    val.type
-                                  ] || "bold",
-                                color:
-                                  a.skillLevel > 0
-                                    ? {
-                                        fire: "orange",
-                                        water: "darkblue",
-                                        earth: "darkgray",
-                                        air: "#dcadf5",
-                                        poision: "#5dc55d",
-                                        acid: "green",
-                                        disease: "#8ad8ab",
-                                        pure: "cyan",
-                                        dark: "#351c75",
-                                        light: "lightyellow",
-                                        mana: "blue",
-                                        hp: "red",
-                                        sta: "#ffbc00",
-                                      }[
-                                        (
-                                          val.type ||
-                                          val.rightType ||
-                                          ""
-                                        ).toLowerCase()
-                                      ]
-                                    : "lightgray",
-                              }}
-                            >
-                              {val.beginner || ""}
-                              {eval(val.value) || ""}
-                              {val.ender || ""} {val.type || ""} {v || ""}{" "}
-                              {val.rightBeginner || ""}
-                              {eval(val.rightValue) || ""}
-                              {val.rightEnder || ""} {val.rightType || ""}
-                            </h5>
-                          );
-                        })}
-                      </div>
-                    );
-                  })}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                overflow: "auto",
+              }}
+            >
+              {(info.actions === "none" ? null : info.actions)
+                .concat(info.inventory.map((item) => item.skills).flat())
+                .map((a) => {
+                  return (
+                    <Item
+                      key={a.name}
+                      enabled={a.skillLevel > 0}
+                      info={a}
+                      player={info}
+                    />
+                  );
+                })}
             </div>
           </Box>
         </div>
