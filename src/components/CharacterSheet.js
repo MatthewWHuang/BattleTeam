@@ -590,7 +590,11 @@ function CharacterSheet({}) {
               }}
             >
               {(info.actions === "none" ? null : info.actions)
-                .concat(info.inventory.map((item) => item.skills).flat())
+                .concat(
+                  (info.inventory === "empty" ? [] : info.inventory)
+                    .map((item) => item.skills)
+                    .flat()
+                )
                 .map((a) => {
                   return (
                     <Item
