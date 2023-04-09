@@ -19,6 +19,9 @@ function Book({ style, children }) {
     };
     get();
   }, []);
+  useEffect(() => {
+    document.title = book.name + " - Battle Team";
+  }, [book]);
 
   if (book === "loading") {
     return (

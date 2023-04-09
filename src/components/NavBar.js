@@ -93,6 +93,7 @@ function NavBar({}) {
                     position: "absolute",
                     borderStyle: "solid",
                     width: 150,
+                    zIndex: 1,
                   }}
                 >
                   {state.username === "rickrollme" ? (
@@ -147,9 +148,7 @@ function NavBar({}) {
                   openMenu === "books" ? setOpenMenu("") : setOpenMenu("books");
                 }}
               >
-                <h3 style={{ marginBottom: 0, cursor: "pointer" }}>
-                  Books(WIP, UNSAFE)
-                </h3>
+                <h3 style={{ marginBottom: 0, cursor: "pointer" }}>Books</h3>
               </div>
               {openMenu === "books" ? (
                 <div
@@ -158,6 +157,7 @@ function NavBar({}) {
                     position: "absolute",
                     borderStyle: "solid",
                     width: 150,
+                    zIndex: 1,
                   }}
                 >
                   <Link to="/list/books">

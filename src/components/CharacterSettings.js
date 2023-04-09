@@ -17,6 +17,7 @@ import {
 import getClass, { getClasses } from "../api/ClassAPI";
 import getBaseSkill from "../api/SkillAPI";
 import { removeCharacterFromAccount } from "../api/AuthAPI";
+import { extractNumber, sum } from "../helpers/TypeHelpers";
 
 function CharacterSettings({}) {
   // let [searchParams, setSearchParams] = useSearchParams();
@@ -38,9 +39,18 @@ function CharacterSettings({}) {
     const getClassInfo = async () => {
       if (newInfo.class) {
         if (newInfo.class !== "none") {
+          console.log(
+            await Promise.all(
+              Object.values(newInfo.class).map(
+                async (c) => await getClass(c.toLowerCase())
+              )
+            )
+          );
           setClassInfo(
-            await getClass(
-              newInfo.class[newInfo.class.length - 1].toLowerCase()
+            await Promise.all(
+              Object.values(newInfo.class).map(
+                async (c) => await getClass(c.toLowerCase())
+              )
             )
           );
         } else {
@@ -74,7 +84,6 @@ function CharacterSettings({}) {
 
   const actionIncreaseClicked = (e) => {
     e.preventDefault();
-    console.log("eaaw", e.target.id);
     setNewInfo({
       ...newInfo,
       actions: Object.values({
@@ -104,29 +113,53 @@ function CharacterSettings({}) {
   const changeClass = async (e) => {
     const nInfo = {
       ...newInfo,
-      ...{ class: [e.target.value] },
+      ...{
+        class: {
+          ...newInfo.class,
+          [extractNumber(e.target.id)]: e.target.value,
+        },
+      },
     };
     if (e.target.value === "none") {
       nInfo.actions = nInfo.actions.filter((v, i) => {
-        return v.name === "Unarmed Attack";
+        return (
+          (v.levelUnlocked >= e.target.level &&
+            v.levelUnlocked <= e.target.level + 19) ||
+          v.name === "Unarmed Attack"
+        );
       });
       nInfo.actions.push(await getBaseSkill("MagicBolt"));
     } else {
       const newClassInfo = await getClass(e.target.value);
 
+      console.log(newClassInfo);
+
       if (e.target.value !== "Mage") {
         nInfo.actions = nInfo.actions.filter((v, i) => {
-          return v.name !== "Magic Bolt";
+          return (
+            (v.levelUnlocked >= e.target.level &&
+              v.levelUnlocked <= e.target.level + 19) ||
+            v.name !== "Magic Bolt"
+          );
         });
       }
       Object.keys(newClassInfo.skills)
-        .map((pos) => [pos, parseInt(pos)])
+        .map((pos) => [pos, extractNumber(pos)])
         .sort((a, b) => a[1] - b[1])
         .forEach((pos) => {
           if (newInfo.level >= pos[1]) {
-            nInfo.actions.push(...newClassInfo.skills[pos[0]]);
+            nInfo.actions.push(
+              ...newClassInfo.skills[pos[0]].map((s) => ({
+                ...s,
+                levelUnlocked: pos[1],
+              }))
+            );
           }
         });
+
+      if (Object.keys(newClassInfo).includes("classStat")) {
+        nInfo.attributes[newClassInfo.classStat] = 0;
+      }
     }
     setNewInfo(nInfo);
   };
@@ -140,19 +173,42 @@ function CharacterSettings({}) {
       e.target.value % 1 === 0 &&
       e.target.value <= 120
     ) {
-      setNewInfo((old) => ({ ...old, ...{ level: e.target.value } }));
       const classInfo = await getClass(newInfo.class);
-      const classSkills = classInfo.skills;
-      Object.keys(classSkills).forEach((pos) => {
-        if (e.target.value >= parseInt(pos)) {
-          classSkills[pos].forEach((skill) => {
-            if (!newInfo.actions.map((a) => a.name).includes(skill.name)) {
-              nInfo.actions.push(skill);
-            }
-          });
-        }
+      var actions = classInfo.map((c) => {
+        Object.keys(c.skills).map((pos) => {
+          if (e.target.value >= parseInt(pos)) {
+            return c.skills[pos].filter((skill) => {
+              return !newInfo.actions.map((a) => a.name).includes(skill.name);
+            });
+          }
+        });
       });
+      setNewInfo((old) => ({ ...old, level: e.target.value, actions }));
     }
+  };
+
+  const getAttribute = (atr) => {
+    return classInfo && classInfo[0] && classInfo[0].stats
+      ? sum(
+          Object.values(classInfo).map((c) => {
+            try {
+              return c.stats.begin[atr] || 0;
+            } catch {
+              return 0;
+            }
+          })
+        ) +
+          sum(
+            Object.values(classInfo).map((c) => {
+              try {
+                return c.stats.level[atr] || 0;
+              } catch {
+                return 0;
+              }
+            })
+          ) *
+            newInfo.level
+      : 0;
   };
 
   if (!info || !info.level || !newInfo || !newInfo.level) {
@@ -244,20 +300,37 @@ function CharacterSettings({}) {
               <label htmlFor="class">Class: </label>
               {[1, 20, 40, 60, 80, 100, 120]
                 .slice(0, Math.ceil((parseInt(newInfo.level) + 1) / 20))
-                .map((l) => {
+                .map((l, index) => {
                   return (
                     <select
                       key={"classSelect" + String(l)}
-                      id="class"
+                      id={"class" + String(index)}
+                      level={String(l)}
                       onChange={changeClass}
-                      value={newInfo.class[0]}
+                      value={
+                        newInfo.class[[1, 20, 40, 60, 80, 100, 120].indexOf(l)]
+                      }
                     >
                       <option value="none">--</option>
-                      {Object.keys(classes).map((c) => (
-                        <option key={c} value={c}>
-                          {classes[c].name}
-                        </option>
-                      ))}
+                      {Object.keys(classes)
+                        .filter(
+                          (c) =>
+                            classes[c].tier.toLowerCase() ===
+                            {
+                              1: "beginner",
+                              20: "novice",
+                              40: "adept",
+                              60: "expert",
+                              80: "elite",
+                              100: "master",
+                              120: "grandmaster",
+                            }[l]
+                        )
+                        .map((c) => (
+                          <option key={c} value={c}>
+                            {classes[c].name}
+                          </option>
+                        ))}
                     </select>
                   );
                 })}
@@ -278,45 +351,19 @@ function CharacterSettings({}) {
                     </label>
                     <p style={{ display: "inline", margin: 0, marginLeft: 5 }}>
                       {newInfo.attributes
-                        ? newInfo.attributes[atr] +
-                          (classInfo && classInfo.stats
-                            ? (classInfo.stats.begin[atr] || 0) +
-                              (classInfo.stats.level[atr] || 0) * newInfo.level
-                            : 0)
+                        ? newInfo.attributes[atr] + getAttribute(atr)
                         : 10}
                     </p>
                   </div>
                   {newInfo.attributes ? (
-                    Object.values(
-                      Object.keys(info.attributes).map(
-                        (a) =>
-                          newInfo.attributes[a] +
-                          (classInfo && classInfo.stats
-                            ? (classInfo.stats.begin[a] || 0) +
-                              (classInfo.stats.level[a] || 0) * newInfo.level
-                            : 0)
+                    sum(
+                      Object.values(
+                        Object.keys(info.attributes).map(
+                          (a) => newInfo.attributes[a]
+                        )
                       )
-                    ).reduce((a, b) => a + b, 0) >=
-                    65 +
-                      ((newInfo.level - 1) * 5 +
-                        (newInfo.class !== "none"
-                          ? Object.keys(info.attributes)
-                              .map((s) => {
-                                if (
-                                  classInfo &&
-                                  classInfo.stats &&
-                                  Object.keys(classInfo.stats.begin).includes(s)
-                                ) {
-                                  return (
-                                    classInfo.stats.begin[s] +
-                                    classInfo.stats.level[s] * newInfo.level
-                                  );
-                                } else {
-                                  return 0;
-                                }
-                              })
-                              .reduce((a, b) => a + b, 0)
-                          : 0)) ? null : (
+                    ) >=
+                    65 + (newInfo.level - 1) * 5 ? null : (
                       <button
                         style={{ padding: 0, marginLeft: 5 }}
                         id={atr}

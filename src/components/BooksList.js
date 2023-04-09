@@ -20,6 +20,7 @@ import getBooks from "../api/BooksAPI";
 function BooksList({ style, children }) {
   const [books, setBooks] = useState([]);
   useEffect(() => {
+    document.title = "Book List - Battle Team";
     const get = async () => {
       const booksValue = await getBooks();
       setBooks(booksValue);
