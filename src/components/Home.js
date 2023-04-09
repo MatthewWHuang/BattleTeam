@@ -5,6 +5,7 @@ import firebaseConfig from "../FirebaseCreds";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Auth.context";
+import { getAd } from "../api/AdAPI";
 
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
@@ -14,6 +15,7 @@ function Home({ globalVals, setGlobalVals }) {
   const navigate = useNavigate();
   const [characterName, setCharacterName] = useState("");
   const { state, logIn } = useContext(AuthContext);
+  const [ad, setAd] = useState("loading");
 
   const characterSelectChanged = (e) => {
     setCharacterName(e.target.value);
@@ -34,6 +36,11 @@ function Home({ globalVals, setGlobalVals }) {
 
   useEffect(() => {
     document.title = "Battle Team";
+    const get = async () => {
+      const data = await getAd();
+      setAd(data);
+    };
+    get();
   });
 
   const createCharacter = () => {};
@@ -73,15 +80,19 @@ function Home({ globalVals, setGlobalVals }) {
           </h4>
         </div>
       )}
-      <div style={{ flexDirection: "column", borderStyle: "dashed" }}>
-        <h3>COMING SOON!!!</h3>
-        <img
-          style={{ height: "70vh" }}
-          alt="Twev's Tome of Arcane Knowledge and War Tactics"
-          src={require("../images/TToAKaWTcover.png")}
-        />
-        <h3>Preorder(not) available now!</h3>
-      </div>
+      {ad === "loading" ? null : (
+        <div style={{ flexDirection: "column", borderStyle: "dashed" }}>
+          <h3>{ad.topText}</h3>
+          <Link to={ad.img.link}>
+            <img
+              style={{ height: "70vh" }}
+              alt={ad.img.alt}
+              src={require(`../images/${ad.img.src}.png`)}
+            />
+          </Link>
+          <h3>{ad.bottomText}</h3>
+        </div>
+      )}
     </div>
   );
 }

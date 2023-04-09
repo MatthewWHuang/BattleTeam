@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import BookNavigationLink from "./BookNavigationLink";
 import JsxParser from "react-jsx-parser";
 import ClassBox from "./InfoBoxes";
+import Contains from "./Contains";
 
 function Book({ style, children }) {
   const { bookName } = useParams();
@@ -28,12 +29,15 @@ function Book({ style, children }) {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "row" }} id="book">
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      id="book"
+    >
       {/* <JsxParser
         components={{ BookNavigationLink, TextBox }}
         jsx={book.value}
       /> */}
-      <div>
+      {/* <div>
         <div
           style={{
             display: "flex",
@@ -890,6 +894,51 @@ function Book({ style, children }) {
             </div>
           </div>
         </div>
+      </div> */}
+      <div
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
+        <div style={{ marginLeft: 50, width: 250 }}>
+          <h3 style={{ margin: 0 }}>Battle Team - </h3>
+          <h1 style={{ margin: 0 }}>{book.name}</h1>
+          {book.cost === "Free" ? (
+            <p>Free</p>
+          ) : (
+            <p>
+              ${book.cost} <Link to="/store">Preorder Available Soon!</Link>
+            </p>
+          )}
+        </div>
+        <img
+          src={require(`../images/${book.src}.png`)}
+          width={250}
+          style={{
+            borderStyle: "solid",
+            borderWidth: "thin",
+            borderColor: "black",
+          }}
+          alt={book.alt}
+        />
+      </div>
+      <p>
+        If you would like to view this book in full, including extra rules and
+        lore, open the{" "}
+        <a href={book.drive} target={"_blank"}>
+          PDF
+        </a>{" "}
+        for this book.
+      </p>
+      <div
+        style={{
+          display: "flex",
+          alignContent: "flex-start",
+          textAlign: "left",
+        }}
+      >
+        <b>
+          <p>This book contains:</p>
+          <Contains list={book.contains} />
+        </b>
       </div>
     </div>
   );
