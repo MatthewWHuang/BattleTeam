@@ -245,7 +245,8 @@ function CharacterSettings({}) {
                           }
                       })
                   ) *
-                      newInfo.level
+                      newInfo.level -
+                  1
             : 0;
     };
 

@@ -87,7 +87,8 @@ function CharacterSheet({}) {
                           }
                       })
                   ) *
-                      info.level
+                      info.level -
+                  1
                 : 0)
         );
     };
@@ -896,7 +897,7 @@ function CharacterSheet({}) {
                                                             ? a.skillLevel
                                                             : 1;
 
-                                                    return a.cost
+                                                    return a.cost && a.cost.type
                                                         ? eval(a.cost.value) >
                                                               ([
                                                                   "hp",
