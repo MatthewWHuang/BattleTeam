@@ -87,8 +87,7 @@ function CharacterSheet({}) {
                           }
                       })
                   ) *
-                      info.level -
-                  1
+                      (info.level - 1)
                 : 0)
         );
     };
