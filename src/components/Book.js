@@ -38,16 +38,26 @@ function Book({ style, children }) {
         <div
             style={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
+                justifyContent: "center",
                 alignItems: "center",
             }}
-            id="book"
         >
-            {/* <JsxParser
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    marginRight: "50px",
+                    width: "25vw",
+                }}
+                id="book"
+            >
+                {/* <JsxParser
         components={{ BookNavigationLink, TextBox }}
         jsx={book.value}
       /> */}
-            {/* <div>
+                {/* <div>
         <div
           style={{
             display: "flex",
@@ -905,55 +915,63 @@ function Book({ style, children }) {
           </div>
         </div>
       </div> */}
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                }}
-            >
-                <div style={{ marginLeft: 50, width: 250 }}>
-                    <h3 style={{ margin: 0 }}>Battle Team - </h3>
-                    <h1 style={{ margin: 0 }}>{book.name}</h1>
-                    {book.cost === "Free" ? (
-                        <p>Free</p>
-                    ) : (
-                        <p>
-                            ${book.cost}{" "}
-                            <Link to="/store">Preorder Available Soon!</Link>
-                        </p>
-                    )}
-                </div>
-                <img
-                    src={require(`../images/${book.src}.png`)}
-                    width={250}
+                <div
                     style={{
-                        borderStyle: "solid",
-                        borderWidth: "thin",
-                        borderColor: "black",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
                     }}
-                    alt={book.alt}
-                />
+                >
+                    <div style={{ width: 250 }}>
+                        <h3 style={{ margin: 0 }}>Battle Team - </h3>
+                        <h1 style={{ margin: 0 }}>{book.name}</h1>
+                        {book.cost === "Free" ? (
+                            <p>Free</p>
+                        ) : (
+                            <div>
+                                <p>
+                                    ${book.cost}{" "}
+                                    {/* <Link to="/store">
+                                    Preorder Available Soon!
+                                </Link> */}
+                                </p>
+                                <h7 style={{ fontSize: "10px" }}>
+                                    Prices are subject to change.
+                                </h7>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                {state.username ? (
+                    book.cost === "Free" ? (
+                        <Link to="view">View Book</Link>
+                    ) : null
+                ) : (
+                    <p>Sign in to view this book!</p>
+                )}
+                <div
+                    style={{
+                        display: "flex",
+                        alignContent: "flex-start",
+                        textAlign: "left",
+                    }}
+                >
+                    <b>
+                        <p>This book contains:</p>
+                        <Contains list={book.contains} />
+                    </b>
+                </div>
             </div>
-            {state.username ? (
-                book.cost === "Free" ? (
-                    <Link to="view">View Book</Link>
-                ) : null
-            ) : (
-                <p>Sign in to view this book!</p>
-            )}
-            <div
+            <img
+                src={require(`../images/${book.src}.png`)}
                 style={{
-                    display: "flex",
-                    alignContent: "flex-start",
-                    textAlign: "left",
+                    borderStyle: "solid",
+                    borderWidth: "thin",
+                    borderColor: "black",
+                    height: "80vh",
                 }}
-            >
-                <b>
-                    <p>This book contains:</p>
-                    <Contains list={book.contains} />
-                </b>
-            </div>
+                alt={book.alt}
+            />
         </div>
     );
 }
