@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/BattleTeam/static/css/main.073c9b0a.css",
-    "main.js": "/BattleTeam/static/js/main.efe6f20c.js",
+    "main.js": "/BattleTeam/static/js/main.59c3b05d.js",
     "static/js/787.71e672d5.chunk.js": "/BattleTeam/static/js/787.71e672d5.chunk.js",
     "static/media/basic-rules.pdf": "/BattleTeam/static/media/basic-rules.fd35584f6315b14cbd7e.pdf",
     "static/media/CharacterSheet.png": "/BattleTeam/static/media/CharacterSheet.1c8442d58f906522efa2.png",
@@ -10,11 +10,11 @@
     "static/media/BattleTeamLogoSquare.png": "/BattleTeam/static/media/BattleTeamLogoSquare.190c2f3d6950372f07ce.png",
     "index.html": "/BattleTeam/index.html",
     "main.073c9b0a.css.map": "/BattleTeam/static/css/main.073c9b0a.css.map",
-    "main.efe6f20c.js.map": "/BattleTeam/static/js/main.efe6f20c.js.map",
+    "main.59c3b05d.js.map": "/BattleTeam/static/js/main.59c3b05d.js.map",
     "787.71e672d5.chunk.js.map": "/BattleTeam/static/js/787.71e672d5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.efe6f20c.js"
+    "static/js/main.59c3b05d.js"
   ]
 }
