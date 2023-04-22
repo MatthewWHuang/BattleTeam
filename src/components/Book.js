@@ -1,46 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { getBook } from "../api/BooksAPI";
+import { getBookInfo } from "../api/BooksAPI";
 import TextBox from "./TextBox";
 import { Link } from "react-router-dom";
 import BookNavigationLink from "./BookNavigationLink";
 import JsxParser from "react-jsx-parser";
 import ClassBox from "./InfoBoxes";
 import Contains from "./Contains";
+import { AuthContext } from "../context/Auth.context";
 
 function Book({ style, children }) {
-  const { bookName } = useParams();
-  const [book, setBook] = useState("loading");
-  useEffect(() => {
-    const get = async () => {
-      const bookValue = await getBook(bookName);
-      setBook(bookValue);
-      // document.getElementById("book").innerHTML = bookValue.value;
-    };
-    get();
-  }, []);
-  useEffect(() => {
-    document.title = book.name + " - Battle Team";
-  }, [book]);
+    const { bookName } = useParams();
+    const [book, setBook] = useState("loading");
+    const { state } = useContext(AuthContext);
 
-  if (book === "loading") {
+    useEffect(() => {
+        const get = async () => {
+            const bookValue = await getBookInfo(bookName);
+            setBook(bookValue);
+            // document.getElementById("book").innerHTML = bookValue.value;
+        };
+        get();
+    }, []);
+    useEffect(() => {
+        document.title = book.name + " - Battle Team";
+    }, [book]);
+
+    if (book === "loading") {
+        return (
+            <div>
+                <h1>Loading Book...</h1>
+            </div>
+        );
+    }
+
     return (
-      <div>
-        <h1>Loading Book...</h1>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-      id="book"
-    >
-      {/* <JsxParser
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+            }}
+            id="book"
+        >
+            {/* <JsxParser
         components={{ BookNavigationLink, TextBox }}
         jsx={book.value}
       /> */}
-      {/* <div>
+            {/* <div>
         <div
           style={{
             display: "flex",
@@ -898,52 +905,56 @@ function Book({ style, children }) {
           </div>
         </div>
       </div> */}
-      <div
-        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-      >
-        <div style={{ marginLeft: 50, width: 250 }}>
-          <h3 style={{ margin: 0 }}>Battle Team - </h3>
-          <h1 style={{ margin: 0 }}>{book.name}</h1>
-          {book.cost === "Free" ? (
-            <p>Free</p>
-          ) : (
-            <p>
-              ${book.cost} <Link to="/store">Preorder Available Soon!</Link>
-            </p>
-          )}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                }}
+            >
+                <div style={{ marginLeft: 50, width: 250 }}>
+                    <h3 style={{ margin: 0 }}>Battle Team - </h3>
+                    <h1 style={{ margin: 0 }}>{book.name}</h1>
+                    {book.cost === "Free" ? (
+                        <p>Free</p>
+                    ) : (
+                        <p>
+                            ${book.cost}{" "}
+                            <Link to="/store">Preorder Available Soon!</Link>
+                        </p>
+                    )}
+                </div>
+                <img
+                    src={require(`../images/${book.src}.png`)}
+                    width={250}
+                    style={{
+                        borderStyle: "solid",
+                        borderWidth: "thin",
+                        borderColor: "black",
+                    }}
+                    alt={book.alt}
+                />
+            </div>
+            {state.username ? (
+                book.cost === "Free" ? (
+                    <Link to="view">View Book</Link>
+                ) : null
+            ) : (
+                <p>Sign in to view this book!</p>
+            )}
+            <div
+                style={{
+                    display: "flex",
+                    alignContent: "flex-start",
+                    textAlign: "left",
+                }}
+            >
+                <b>
+                    <p>This book contains:</p>
+                    <Contains list={book.contains} />
+                </b>
+            </div>
         </div>
-        <img
-          src={require(`../images/${book.src}.png`)}
-          width={250}
-          style={{
-            borderStyle: "solid",
-            borderWidth: "thin",
-            borderColor: "black",
-          }}
-          alt={book.alt}
-        />
-      </div>
-      <p>
-        If you would like to view this book in full, including extra rules and
-        lore, open the{" "}
-        <a href={book.drive} target={"_blank"}>
-          PDF
-        </a>{" "}
-        for this book.
-      </p>
-      <div
-        style={{
-          display: "flex",
-          alignContent: "flex-start",
-          textAlign: "left",
-        }}
-      >
-        <b>
-          <p>This book contains:</p>
-          <Contains list={book.contains} />
-        </b>
-      </div>
-    </div>
-  );
+    );
 }
 export default Book;

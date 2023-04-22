@@ -18,53 +18,61 @@ import { get, del, set } from "./FirebaseAPI";
 // const app = initializeApp(firebaseConfig);
 // const db = getDatabase();
 async function login(username, pass) {
-  const data = await get(`accounts/${username}`);
-  if (data === null) {
-    return ["error"];
-  }
-  const hPass = await sha1(pass);
-  if (hPass === data.password) {
-    return ["success", data.admin];
-  } else {
-    return ["incorrect"];
-  }
+    const data = await get(`accounts/${username}`);
+    if (data === null) {
+        return ["error"];
+    }
+    const hPass = await sha1(pass);
+    if (hPass === data.password) {
+        return ["success", data.admin];
+    } else {
+        return ["incorrect"];
+    }
 }
 
 async function signup(username, pass) {
-  const data = await get(`accounts`);
-  if (data === null) {
-    return ["error"];
-  }
-  if (Object.keys(data).includes(username)) {
-    return "usernametaken";
-  } else {
-    const hPass = await sha1(pass);
-    set(`accounts/${username}`, {
-      characters: "none",
-      password: hPass,
-      admin: false,
-    });
-    return "success";
-  }
+    const data = await get(`accounts`);
+    if (data === null) {
+        return ["error"];
+    }
+    if (Object.keys(data).includes(username)) {
+        return "usernametaken";
+    } else {
+        const hPass = await sha1(pass);
+        set(`accounts/${username}`, {
+            characters: "none",
+            password: hPass,
+            admin: false,
+        });
+        return "success";
+    }
 }
 
 async function getCharacters(username) {
-  const data = await get(`accounts/${username}/characters`);
-  if (data === null) {
-    return [];
-  }
-  return data;
+    const data = await get(`accounts/${username}/characters`);
+    if (data === null) {
+        return [];
+    }
+    return data;
 }
 
 async function removeCharacterFromAccount(username, id) {
-  const index = (await getCharacters(username)).findIndex((c) => c === id);
-  console.log("length", (await get(`accounts/${username}/characters`)).length);
+    const characters = await getCharacters(username);
+    const index = characters.findIndex((c) => c === id);
+    console.log(
+        "length",
+        (await get(`accounts/${username}/characters`)).length
+    );
 
-  if ((await get(`accounts/${username}/characters`)).length === 1) {
-    set(`accounts/${username}/characters/`, "none");
-  } else {
-    del(`accounts/${username}/characters/${index}`);
-  }
+    if ((await get(`accounts/${username}/characters`)).length === 1) {
+        set(`accounts/${username}/characters/`, "none");
+    } else {
+        set(
+            `accounts/${username}/characters/`,
+            Object.values(characters).filter((char) => char !== id)
+        );
+        // del(`accounts/${username}/characters/${index}`);
+    }
 }
 
 export default login;
