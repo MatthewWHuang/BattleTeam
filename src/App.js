@@ -18,6 +18,7 @@ import CharacterList from "./components/CharacterList";
 import BooksList from "./components/BooksList";
 import Book from "./components/Book";
 import BookView from "./components/BookView";
+import Gameboard from "./components/Gameboard";
 
 // // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -78,6 +79,11 @@ const router = createBrowserRouter(
                 {
                     path: "books/:bookName/view",
                     element: <BookView />,
+                    errorElement: <ErrorPage />,
+                },
+                {
+                    path: "gameboard",
+                    element: <Gameboard />,
                     errorElement: <ErrorPage />,
                 },
             ],
