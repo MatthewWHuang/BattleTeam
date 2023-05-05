@@ -88,7 +88,8 @@ function CharacterSheet({}) {
                       })
                   ) *
                       (info.level - 1)
-                : 0)
+                : 0) +
+            Math.floor(5 / info.level) * 5
         );
     };
 

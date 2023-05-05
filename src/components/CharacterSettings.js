@@ -226,16 +226,17 @@ function CharacterSettings({}) {
     };
 
     const getAttribute = (atr) => {
-        return classInfo && classInfo[0] && classInfo[0].stats
-            ? sum(
-                  Object.values(classInfo).map((c) => {
-                      try {
-                          return c.stats.begin[atr] || 0;
-                      } catch {
-                          return 0;
-                      }
-                  })
-              ) +
+        return (
+            (classInfo && classInfo[0] && classInfo[0].stats
+                ? sum(
+                      Object.values(classInfo).map((c) => {
+                          try {
+                              return c.stats.begin[atr] || 0;
+                          } catch {
+                              return 0;
+                          }
+                      })
+                  ) +
                   sum(
                       Object.values(classInfo).map((c) => {
                           try {
@@ -246,7 +247,9 @@ function CharacterSettings({}) {
                       })
                   ) *
                       (newInfo.level - 1)
-            : 0;
+                : 0) +
+            Math.floor(5 / info.level) * 5
+        );
     };
 
     if (!info || !info.level || !newInfo || !newInfo.level) {
