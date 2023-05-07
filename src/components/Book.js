@@ -925,7 +925,7 @@ function Book({ style, children }) {
                     <div style={{ width: 250 }}>
                         <h3 style={{ margin: 0 }}>Battle Team - </h3>
                         <h1 style={{ margin: 0 }}>{book.name}</h1>
-                        {book.cost === "Free" ? (
+                        {/* {book.cost === "Free" ? (
                             <p>Free</p>
                         ) : (
                             <div>
@@ -939,16 +939,16 @@ function Book({ style, children }) {
                                     Prices are subject to change.
                                 </h7>
                             </div>
-                        )}
+                        )} */}
                     </div>
                 </div>
-                {state.username ? (
+                {/* {state.username ? (
                     book.cost === "Free" ? (
                         <Link to="view">View Book</Link>
                     ) : null
                 ) : (
                     <p>Sign in to view this book!</p>
-                )}
+                )} */}
                 <div
                     style={{
                         display: "flex",
