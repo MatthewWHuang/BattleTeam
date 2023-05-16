@@ -139,7 +139,10 @@ function CharacterSheet({}) {
     const addItem = async (e) => {
         e.preventDefault();
         console.log(e.target[0].value, await getItem(e.target[0].value));
-        editChar({ ...info, inventory: [await getItem(e.target[0].value)] });
+        editChar({
+            ...info,
+            inventory: [...info.inventory, await getItem(e.target[0].value)],
+        });
     };
 
     useEffect(() => {
@@ -749,7 +752,6 @@ function CharacterSheet({}) {
                                 overflow: "auto",
                             }}
                         >
-                            <p>{JSON.stringify(info.inventory)}</p>
                             {info.inventory === "empty" ? (
                                 <h5>Inventory Empty</h5>
                             ) : (
@@ -874,84 +876,117 @@ function CharacterSheet({}) {
                                 overflow: "auto",
                             }}
                         >
-                            {(info.actions === "none" ? null : info.actions)
-                                .concat(
-                                    (info.inventory === "empty"
-                                        ? []
-                                        : info.inventory
-                                    )
-                                        .map((item) =>
-                                            item.skills ? item.skills : []
+                            <div>
+                                {(info.actions === "none" ? [] : info.actions)
+                                    .concat(
+                                        (info.inventory === "empty"
+                                            ? []
+                                            : info.inventory
                                         )
-                                        .flat()
-                                )
-                                // .filter(
-                                //     (action) =>
-                                //         action.tags &&
-                                //         action.tags.includes("action")
-                                // )
-                                .map((a) => {
-                                    return (
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <button
+                                            .map((item) =>
+                                                item.skills ? item.skills : []
+                                            )
+                                            .flat()
+                                    )
+                                    .concat(
+                                        (info.inventory === "empty"
+                                            ? []
+                                            : info.inventory
+                                        )
+                                            .filter((item) =>
+                                                item.tags
+                                                    .map((tag) =>
+                                                        tag.toLowerCase()
+                                                    )
+                                                    .includes("weapon")
+                                            )
+                                            .map((item) => ({
+                                                ...item,
+                                                tags: [
+                                                    ...Object.values(item.tags),
+                                                    "action",
+                                                    "attack",
+                                                ],
+                                            }))
+                                    )
+                                    // .filter(
+                                    //     (action) =>
+                                    //         action.tags &&
+                                    //         action.tags.includes("action")
+                                    // )
+                                    .map((a) => {
+                                        return (
+                                            <div
                                                 style={{
-                                                    marginRight: 10,
-                                                    visibility:
-                                                        a.tags &&
-                                                        a.tags.includes(
-                                                            "action"
-                                                        )
-                                                            ? "visible"
-                                                            : "hidden",
-                                                    cursor: "pointer",
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
                                                 }}
-                                                onClick={() => {
-                                                    takeAction(a);
-                                                }}
-                                                disabled={(() => {
-                                                    const sl =
-                                                        a.skillLevel || 0 > 0
-                                                            ? a.skillLevel
-                                                            : 1;
-
-                                                    return a.cost && a.cost.type
-                                                        ? eval(a.cost.value) >
-                                                              ([
-                                                                  "hp",
-                                                                  "mana",
-                                                              ].includes(
-                                                                  a.cost.type
-                                                              )
-                                                                  ? currentInfo[
-                                                                        a.cost.type.toLowerCase()
-                                                                    ]
-                                                                  : currentInfo
-                                                                        .classPools[
-                                                                        a.cost.type.toLowerCase()
-                                                                    ])
-                                                        : false;
-                                                })()}
                                             >
-                                                <FontAwesomeIcon
-                                                    icon={faDiceD6}
-                                                />
-                                            </button>
+                                                <button
+                                                    style={{
+                                                        marginRight: 10,
+                                                        visibility:
+                                                            a.tags &&
+                                                            a.tags.includes(
+                                                                "action"
+                                                            )
+                                                                ? "visible"
+                                                                : "hidden",
+                                                        cursor: "pointer",
+                                                    }}
+                                                    onClick={() => {
+                                                        takeAction(a);
+                                                    }}
+                                                    disabled={(() => {
+                                                        const sl =
+                                                            a.skillLevel ||
+                                                            0 > 0
+                                                                ? a.skillLevel
+                                                                : 1;
 
-                                            <Item
-                                                key={a.name}
-                                                enabled={a.skillLevel > 0}
-                                                info={a}
-                                                player={info}
-                                            />
-                                        </div>
-                                    );
-                                })}
+                                                        return a.cost &&
+                                                            a.cost.type
+                                                            ? eval(
+                                                                  a.cost.value
+                                                              ) >
+                                                                  ([
+                                                                      "hp",
+                                                                      "mana",
+                                                                  ].includes(
+                                                                      a.cost
+                                                                          .type
+                                                                  )
+                                                                      ? currentInfo[
+                                                                            a.cost.type.toLowerCase()
+                                                                        ]
+                                                                      : currentInfo
+                                                                            .classPools[
+                                                                            a.cost.type.toLowerCase()
+                                                                        ])
+                                                            : false;
+                                                    })()}
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faDiceD6}
+                                                    />
+                                                </button>
+
+                                                <Item
+                                                    style={{ width: "100%" }}
+                                                    key={a.name}
+                                                    enabled={
+                                                        a.skillLevel
+                                                            ? a.skillLevel > 0
+                                                            : true
+                                                    }
+                                                    info={a}
+                                                    player={info}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                            </div>
                         </div>
                     </Box>
                 </div>

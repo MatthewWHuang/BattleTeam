@@ -1,3 +1,6 @@
+import React from "react";
+import { Tooltip } from "react-tooltip";
+
 const TYPECOLOR = {
     fire: "orange",
     water: "darkblue",
@@ -27,7 +30,7 @@ const RARITYCOLOR = {
     epicunique: "pink",
     legendary: "gold",
 };
-function Item({ info, enabled, player }) {
+function Item({ info, enabled, player, style }) {
     if (!info || !info.name) {
         return null;
     }
@@ -39,6 +42,7 @@ function Item({ info, enabled, player }) {
                 alignItems: "center",
                 borderBottomStyle: "dashed",
                 borderWidth: "thin",
+                ...style,
             }}
         >
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -49,11 +53,66 @@ function Item({ info, enabled, player }) {
                             ? RARITYCOLOR[info.rarity || ""]
                             : "gray",
                         cursor: "pointer",
+                        // title={info.description}
                     }}
-                    title={info.description}
+                    data-tooltip-html={
+                        info.description
+                            ? info.description
+                                  .split(" ")
+                                  .reduce(
+                                      (acc, val, idx) =>
+                                          idx % 5 !== 0
+                                              ? acc
+                                                  ? `${acc} ${val}`
+                                                  : `${val}`
+                                              : `${acc}<br/>${val}`,
+                                      ""
+                                  )
+                                  .slice(5)
+                            : ""
+                    }
+                    // data-for={info.name + "-tooltip"}
+                    data-tooltip-id={info.name + "-tooltip"}
+                    // data-tooltip-content={
+                    //     info.description
+                    //         ? info.description
+                    //               .split(/[\s,.]+/)
+                    //               .reduce(
+                    //                   (acc, val, idx) =>
+                    //                       idx % 2 === 0
+                    //                           ? acc
+                    //                               ? `${acc} ${val}`
+                    //                               : `${val}`
+                    //                           : `${acc}<br/>${val}`,
+                    //                   ""
+                    //               )
+                    //         : ""
+                    // }
+                    // data-tooltip-place="top"
                 >
                     {info.name}
                 </h4>
+                <Tooltip
+                    id={info.name + "-tooltip"}
+                    multiline={true}
+                    width="100px"
+                />
+                {/* <p>
+                        {info.description
+                            ? info.description
+                                  .split(/[\s,.]+/)
+                                  .reduce(
+                                      (acc, val, idx) =>
+                                          idx % 2 === 0
+                                              ? acc
+                                                  ? `${acc} ${val}`
+                                                  : `${val}`
+                                              : `${acc}<br/>${val}`,
+                                      ""
+                                  )
+                            : ""}
+                    </p> */}
+                {/* </Tooltip> */}
                 <h6
                     style={{
                         margin: 0,
@@ -66,14 +125,24 @@ function Item({ info, enabled, player }) {
                 >
                     <i>
                         {(
-                            (info.tags &&
-                                info.tags.filter((tag) =>
-                                    ["action, attack"].includes(tag)
-                                )) ||
-                            []
+                            (info.tags
+                                ? info.tags
+                                      .filter(
+                                          (tag) =>
+                                              !["action, attack"].includes(tag)
+                                      )
+                                      .map(
+                                          (tag) =>
+                                              tag[0].toUpperCase() +
+                                              tag.slice(1)
+                                      )
+                                : []) || []
                         )
-                            .concat(info.rarity || "Common")
-                            .join(", ")}
+                            .concat(
+                                info.skillLevel ? null : info.rarity || "Common"
+                            )
+                            .join(", ")
+                            .replace(/,\s*$/, "")}
                     </i>
                 </h6>
             </div>
