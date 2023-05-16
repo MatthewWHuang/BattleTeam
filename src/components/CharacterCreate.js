@@ -50,7 +50,7 @@ function CharacterCreate({}) {
         loadChars();
     });
 
-    if (!state.admin && Object.keys(characters).length >= 3) {
+    if (!state.admin && Object.keys(characters).filter((c) => c).length >= 8) {
         return (
             <div>
                 <h2>

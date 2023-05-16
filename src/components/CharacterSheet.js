@@ -12,6 +12,7 @@ import Input from "./Input";
 import Item from "./Item";
 import { sum } from "../helpers/TypeHelpers";
 import getClass from "../api/ClassAPI";
+import getItemNames, { getItem } from "../api/ItemAPI";
 
 function CharacterSheet({}) {
     // let [searchParams, setSearchParams] = useSearchParams();
@@ -23,6 +24,7 @@ function CharacterSheet({}) {
     const info = useCharacter(characterID);
     const [currentInfo, setCurrentInfo] = useState(info);
     const [classInfo, setClassInfo] = useState({});
+    const [itemNames, setItemNames] = useState([]);
 
     // useEffect(() => {
     //   const characterRef = ref(db, "characters/" + characterName);
@@ -89,7 +91,7 @@ function CharacterSheet({}) {
                   ) *
                       (info.level - 1)
                 : 0) +
-            Math.floor(5 / info.level) * 5
+            Math.floor(info.level / 5) * 5
         );
     };
 
@@ -134,17 +136,16 @@ function CharacterSheet({}) {
         }
     };
 
+    const addItem = async (e) => {
+        e.preventDefault();
+        console.log(e.target[0].value, await getItem(e.target[0].value));
+        editChar({ ...info, inventory: [await getItem(e.target[0].value)] });
+    };
+
     useEffect(() => {
         const getClassInfo = async () => {
             if (info.class) {
                 if (info.class !== "none") {
-                    console.log(
-                        await Promise.all(
-                            Object.values(info.class).map(
-                                async (c) => await getClass(c.toLowerCase())
-                            )
-                        )
-                    );
                     setClassInfo(
                         await Promise.all(
                             Object.values(info.class).map(
@@ -157,8 +158,12 @@ function CharacterSheet({}) {
                 }
             }
         };
+        const getItemInfo = async () => {
+            setItemNames(await getItemNames());
+        };
         document.title = info.name + " - Battle Team";
         getClassInfo();
+        getItemInfo();
         setCurrentInfo(info);
     }, [info]);
 
@@ -375,7 +380,7 @@ function CharacterSheet({}) {
                     </Box>
                     {Object.keys(info).includes("classPools")
                         ? Object.keys(info.classPools).map((classPool) => (
-                              <Box>
+                              <Box key={classPool}>
                                   <h5 style={{ margin: 0, color: "yellow" }}>
                                       {classPool.toUpperCase()}
                                   </h5>
@@ -744,6 +749,7 @@ function CharacterSheet({}) {
                                 overflow: "auto",
                             }}
                         >
+                            <p>{JSON.stringify(info.inventory)}</p>
                             {info.inventory === "empty" ? (
                                 <h5>Inventory Empty</h5>
                             ) : (
@@ -758,6 +764,21 @@ function CharacterSheet({}) {
                                     ))}
                                 </div>
                             )}
+                            <form onSubmit={addItem}>
+                                <datalist id="itemList">
+                                    {itemNames.map((itemName) => (
+                                        <option value={itemName} key={itemName}>
+                                            {itemName}
+                                        </option>
+                                    ))}
+                                </datalist>
+                                <input
+                                    type="text"
+                                    list="itemList"
+                                    autoComplete="off"
+                                />
+                                <button type="submit">Add Item</button>
+                            </form>
                         </div>
                     </Box>
                     <Box
@@ -859,7 +880,9 @@ function CharacterSheet({}) {
                                         ? []
                                         : info.inventory
                                     )
-                                        .map((item) => item.skills)
+                                        .map((item) =>
+                                            item.skills ? item.skills : []
+                                        )
                                         .flat()
                                 )
                                 // .filter(

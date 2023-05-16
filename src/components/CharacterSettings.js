@@ -248,7 +248,7 @@ function CharacterSettings({}) {
                   ) *
                       (newInfo.level - 1)
                 : 0) +
-            Math.floor(5 / info.level) * 5
+            Math.floor(info.level / 5) * 5
         );
     };
 
