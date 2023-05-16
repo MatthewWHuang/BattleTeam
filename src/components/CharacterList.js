@@ -13,23 +13,27 @@ function CharacterList({}) {
     useEffect(() => {
         const getData = async () => {
             const ids = await getCharacters(state.username);
-            try {
-                const names = await idsToInfo(ids);
-                var newCharacters = Object.keys(names)
-                    .map((id) => {
-                        const idVal = names[id];
-                        if (idVal.level) {
-                            return {
-                                id,
-                                ...idVal,
-                            };
-                        } else {
-                            return "none";
-                        }
-                    })
-                    .filter((char) => char !== "none");
-            } catch {
-                var newCharacters = [];
+            if (ids == "none") {
+                newCharacters = [];
+            } else {
+                try {
+                    const names = await idsToInfo(ids);
+                    var newCharacters = Object.keys(names)
+                        .map((id) => {
+                            const idVal = names[id];
+                            if (idVal.level) {
+                                return {
+                                    id,
+                                    ...idVal,
+                                };
+                            } else {
+                                return "none";
+                            }
+                        })
+                        .filter((char) => char !== "none");
+                } catch {
+                    var newCharacters = [];
+                }
             }
             // for (let id in ids) {
             //   console.log(await getCharacter(id));
