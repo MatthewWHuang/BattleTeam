@@ -43,6 +43,7 @@ async function signup(username, pass) {
             characters: "none",
             password: hPass,
             admin: false,
+            books: "none",
         });
         return "success";
     }
@@ -52,6 +53,14 @@ async function getCharacters(username) {
     const data = await get(`accounts/${username}/characters`);
     if (data === null) {
         return [];
+    }
+    return data;
+}
+
+async function getBookAccess(username) {
+    const data = await get(`accounts/${username}/books`);
+    if (data === null) {
+        return "none";
     }
     return data;
 }
@@ -76,4 +85,4 @@ async function removeCharacterFromAccount(username, id) {
 }
 
 export default login;
-export { signup, getCharacters, removeCharacterFromAccount };
+export { signup, getCharacters, removeCharacterFromAccount, getBookAccess };

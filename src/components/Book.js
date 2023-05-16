@@ -8,11 +8,13 @@ import JsxParser from "react-jsx-parser";
 import ClassBox from "./InfoBoxes";
 import Contains from "./Contains";
 import { AuthContext } from "../context/Auth.context";
+import { getBookAccess } from "../api/AuthAPI";
 
 function Book({ style, children }) {
     const { bookName } = useParams();
     const [book, setBook] = useState("loading");
     const { state } = useContext(AuthContext);
+    const [access, setAccess] = useState(false);
 
     useEffect(() => {
         const get = async () => {
@@ -25,6 +27,15 @@ function Book({ style, children }) {
     useEffect(() => {
         document.title = book.name + " - Battle Team";
     }, [book]);
+    useEffect(() => {
+        const get = async () => {
+            const books = await getBookAccess(state.username);
+            if (books !== "none" && books.includes(bookName)) {
+                setAccess(true);
+            }
+        };
+        get();
+    }, [state.username]);
 
     if (book === "loading") {
         return (
@@ -925,30 +936,32 @@ function Book({ style, children }) {
                     <div style={{ width: 250 }}>
                         <h3 style={{ margin: 0 }}>Battle Team - </h3>
                         <h1 style={{ margin: 0 }}>{book.name}</h1>
-                        {/* {book.cost === "Free" ? (
-                            <p>Free</p>
-                        ) : (
-                            <div>
-                                <p>
-                                    ${book.cost}{" "}
-                                    {/* <Link to="/store">
-                                    Preorder Available Soon!
-                                </Link> */}
-                                </p>
-                                <h7 style={{ fontSize: "10px" }}>
-                                    Prices are subject to change.
-                                </h7>
-                            </div>
-                        )} */}
+                        {
+                            // book.cost === "Free" ? (
+                            //     <p>Free</p>
+                            // ) : (
+                            //     // <div>
+                            //     //     <p>
+                            //     //         ${book.cost}{" "}
+                            //     //         {/* <Link to="/store">
+                            //     //         Preorder Available Soon!
+                            //     //     </Link> */}
+                            //     //     </p>
+                            //     //     <h7 style={{ fontSize: "10px" }}>
+                            //     //         Prices are subject to change.
+                            //     //     </h7>
+                            //     // </div>
+                            // )
+                        }
                     </div>
                 </div>
-                {/* {state.username ? (
-                    book.cost === "Free" ? (
+                {state.username ? (
+                    access ? (
                         <Link to="view">View Book</Link>
                     ) : null
                 ) : (
                     <p>Sign in to view this book!</p>
-                )} */}
+                )}
                 <div
                     style={{
                         display: "flex",
