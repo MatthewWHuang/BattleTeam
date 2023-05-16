@@ -141,7 +141,10 @@ function CharacterSheet({}) {
         console.log(e.target[0].value, await getItem(e.target[0].value));
         editChar({
             ...info,
-            inventory: [...info.inventory, await getItem(e.target[0].value)],
+            inventory: [
+                ...(info.inventory == "empty" ? [] : info.inventory),
+                await getItem(e.target[0].value),
+            ],
         });
     };
 
