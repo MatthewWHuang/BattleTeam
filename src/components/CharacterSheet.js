@@ -25,6 +25,7 @@ function CharacterSheet({}) {
     const [currentInfo, setCurrentInfo] = useState(info);
     const [classInfo, setClassInfo] = useState({});
     const [itemNames, setItemNames] = useState([]);
+    const [skillLevelsSelected, setSkillLevelsSelected] = useState({});
 
     // useEffect(() => {
     //   const characterRef = ref(db, "characters/" + characterName);
@@ -111,8 +112,12 @@ function CharacterSheet({}) {
             );
         }
         if (Object.keys(a).includes("cost")) {
+            console.log(skillLevelsSelected[a.name]);
             if (["hp", "mana"].includes(a.cost.type)) {
-                const sl = a.skillLevel || 0 > 0 ? a.skillLevel : 1;
+                const sl =
+                    (skillLevelsSelected[a.name] || a.skillLevel || 0) > 0
+                        ? skillLevelsSelected[a.name] || a.skillLevel
+                        : 1;
                 editChar({
                     ...currentInfo,
                     [a.cost.type.toLowerCase()]: parseInt(
@@ -121,7 +126,10 @@ function CharacterSheet({}) {
                     ),
                 });
             } else {
-                const sl = a.skillLevel || 0 > 0 ? a.skillLevel : 1;
+                const sl =
+                    (skillLevelsSelected[a.name] || a.skillLevel || 0) > 0
+                        ? skillLevelsSelected[a.name] || a.skillLevel
+                        : 1;
                 editChar({
                     ...currentInfo,
                     classPools: {
@@ -943,9 +951,15 @@ function CharacterSheet({}) {
                                                     }}
                                                     disabled={(() => {
                                                         const sl =
+                                                            skillLevelsSelected[
+                                                                a.name
+                                                            ] ||
                                                             a.skillLevel ||
                                                             0 > 0
-                                                                ? a.skillLevel
+                                                                ? skillLevelsSelected[
+                                                                      a.name
+                                                                  ] ||
+                                                                  a.skillLevel
                                                                 : 1;
 
                                                         return a.cost &&
@@ -974,7 +988,35 @@ function CharacterSheet({}) {
                                                         icon={faDiceD6}
                                                     />
                                                 </button>
-
+                                                <select
+                                                    onChange={(e) => {
+                                                        setSkillLevelsSelected({
+                                                            ...skillLevelsSelected,
+                                                            [a.name]:
+                                                                e.target.value,
+                                                        });
+                                                    }}
+                                                    defaultValue={String(
+                                                        a.skillLevel
+                                                    )}
+                                                    style={{
+                                                        marginRight: "10px",
+                                                    }}
+                                                >
+                                                    {[
+                                                        ...Array(
+                                                            a.skillLevel
+                                                        ).keys(),
+                                                    ].map((lvl) => (
+                                                        <option
+                                                            value={String(
+                                                                lvl + 1
+                                                            )}
+                                                        >
+                                                            {lvl + 1}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                                 <Item
                                                     style={{ width: "100%" }}
                                                     key={a.name}
@@ -985,6 +1027,11 @@ function CharacterSheet({}) {
                                                     }
                                                     info={a}
                                                     player={info}
+                                                    skillLevel={
+                                                        skillLevelsSelected[
+                                                            a.name
+                                                        ]
+                                                    }
                                                 />
                                             </div>
                                         );

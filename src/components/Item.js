@@ -30,7 +30,7 @@ const RARITYCOLOR = {
     epicunique: "pink",
     legendary: "gold",
 };
-function Item({ info, enabled, player, style }) {
+function Item({ info, enabled, player, style, skillLevel }) {
     if (!info || !info.name) {
         return null;
     }
@@ -161,7 +161,8 @@ function Item({ info, enabled, player, style }) {
                     return null;
                 }
                 const val = info[v];
-                const sl = info.skillLevel > 0 ? info.skillLevel : 1;
+                const sl =
+                    skillLevel || (info.skillLevel > 0 ? info.skillLevel : 1);
                 return (
                     <h5
                         key={info.name + " " + v}
