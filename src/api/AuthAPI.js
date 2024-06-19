@@ -18,15 +18,19 @@ import { get, del, set } from "./FirebaseAPI";
 // const app = initializeApp(firebaseConfig);
 // const db = getDatabase();
 async function login(username, pass) {
-    const data = await get(`accounts/${username}`);
-    if (data === null) {
+    try {
+        const data = await get(`accounts/${username}`);
+        if (data === null) {
+            return ["error"];
+        }
+        const hPass = await sha1(pass);
+        if (hPass === data.password) {
+            return ["success", data.admin];
+        } else {
+            return ["incorrect"];
+        }
+    } catch {
         return ["error"];
-    }
-    const hPass = await sha1(pass);
-    if (hPass === data.password) {
-        return ["success", data.admin];
-    } else {
-        return ["incorrect"];
     }
 }
 

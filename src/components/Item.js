@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Tooltip } from "react-tooltip";
+import getClass, { getClasses } from "../api/ClassAPI";
+import { extractNumber, sum } from "../helpers/TypeHelpers";
 
 const TYPECOLOR = {
     fire: "orange",
@@ -31,6 +33,47 @@ const RARITYCOLOR = {
     legendary: "gold",
 };
 function Item({ info, enabled, player, style, skillLevel }) {
+    const [classInfo, setClassInfo] = useState();
+    useEffect(() => {
+        const getClassInfo = async () => {
+            setClassInfo(
+                await Promise.all(
+                    Object.values(player.class).map(
+                        async (c) => await getClass(c.toLowerCase())
+                    )
+                )
+            );
+        };
+        getClassInfo();
+    }, []);
+    const getAttribute = (atr) => {
+        return (
+            player.attributes[atr] +
+            (classInfo && classInfo[0] && classInfo[0].stats
+                ? sum(
+                      Object.values(classInfo).map((c) => {
+                          try {
+                              return c.stats.begin[atr] || 0;
+                          } catch {
+                              return 0;
+                          }
+                      })
+                  ) +
+                  sum(
+                      Object.values(classInfo).map((c) => {
+                          try {
+                              return c.stats.level[atr] || 0;
+                          } catch {
+                              return 0;
+                          }
+                      })
+                  ) *
+                      (player.level - 1)
+                : 0) +
+            Math.floor(player.level / 5) * 5
+        );
+    };
+
     if (!info || !info.name) {
         return null;
     }

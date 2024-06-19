@@ -13,6 +13,7 @@ function CharacterList({}) {
     useEffect(() => {
         const getData = async () => {
             const ids = await getCharacters(state.username);
+            // console.log(sta)
             if (ids == "none") {
                 newCharacters = [];
             } else {

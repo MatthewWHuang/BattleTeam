@@ -778,18 +778,18 @@ function CharacterSheet({}) {
                                 </div>
                             )}
                             <form onSubmit={addItem}>
-                                <datalist id="itemList">
+                                <select id="itemList">
                                     {itemNames.map((itemName) => (
                                         <option value={itemName} key={itemName}>
                                             {itemName}
                                         </option>
                                     ))}
-                                </datalist>
-                                <input
+                                </select>
+                                {/* <input
                                     type="text"
                                     list="itemList"
                                     autoComplete="off"
-                                />
+                                /> */}
                                 <button type="submit">Add Item</button>
                             </form>
                         </div>
